@@ -25,5 +25,6 @@ public class Chess extends Application {
             System.exit(0);
         });
         stage.show();
+        controllerMainTable.init();
     }
 }
