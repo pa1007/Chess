@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="board" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="955.0" prefWidth="1203.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.pa1007.chess.controller.GameController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="62.0" minWidth="150.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="120.0" minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+    </rowConstraints>
+</GridPane>
