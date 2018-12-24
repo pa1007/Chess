@@ -3,34 +3,37 @@ package fr.pa1007.chess.chessman.pieces;
 import fr.pa1007.chess.chessman.AbstractChessMan;
 import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.game.Game;
-import fr.pa1007.chess.utils.Pattern;
+import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import fr.pa1007.chess.utils.Type;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 public class Bishop extends AbstractChessMan {
 
-    public Bishop(Game chessGame, Rectangle graph, Place place) {
-        super(chessGame, graph, place);
-        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/Bishop.png")));
+    private MovePattern movePattern;
+    private int         move;
+
+    public Bishop(Game chessGame, Rectangle graph, Place place, Player player) {
+        super(chessGame, graph, place, player);
+        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/"
+                                                      + player.getTeam().toLowerCase()
+                                                      + "/Bishop.png")));
+        this.graph.setUserData(this);
+        this.movePattern = new MovePattern(this);
+        move = 0;
+    }
+
+
+    @Override
+    public Rectangle getGraphicRep() {
+        return graph;
     }
 
     @Override
-    public Pattern movePattern(Player player) {
-        return Game.getPatternFrom(player);
-    }
-
-    @Override
-    public void move() {
-
-    }
-
-    @Override
-    public Type type() {
-        return null;
+    public ChessManType type() {
+        return ChessManType.BISHOP;
     }
 
     @Override
@@ -40,11 +43,26 @@ public class Bishop extends AbstractChessMan {
 
     @Override
     public Image getImage() {
-        return new Image("/fr/pa1007/chess/display/Bishop.png");
+        return new Image("/fr/pa1007/chess/display/black/Bishop.png");
     }
 
     @Override
     public Place place() {
-        return null;
+        return this.place;
+    }
+
+    @Override
+    public int movementNumber() {
+        return move;
+    }
+
+    @Override
+    public void setMoveNumber(int i) {
+        move = i;
+    }
+
+    @Override
+    public MovePattern movePattern() {
+        return this.movePattern;
     }
 }

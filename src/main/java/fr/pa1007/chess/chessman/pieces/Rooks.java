@@ -1,35 +1,44 @@
 package fr.pa1007.chess.chessman.pieces;
 
 import fr.pa1007.chess.chessman.AbstractChessMan;
+import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.game.Game;
-import fr.pa1007.chess.utils.Pattern;
+import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import fr.pa1007.chess.utils.Type;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 public class Rooks extends AbstractChessMan {
 
-    public Rooks(Game chessGame, Rectangle graph, Place place) {
-        super(chessGame, graph, place);
-        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/Rook.png")));
+    private final MovePattern movePattern;
+
+    private int move;
+
+    public Rooks(Game chessGame, Rectangle graph, Place place, Player player) {
+        super(chessGame, graph, place, player);
+        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/"
+                                                      + player.getTeam().toLowerCase()
+                                                      + "/Rook.png")));
+        this.graph.setUserData(this);
+        this.movePattern = new MovePattern(this);
     }
 
     @Override
-    public Pattern movePattern(Player player) {
-        return null;
+    public MovePattern movePattern() {
+        return this.movePattern;
+    }
+
+
+    @Override
+    public Rectangle getGraphicRep() {
+        return graph;
     }
 
     @Override
-    public void move() {
-
-    }
-
-    @Override
-    public Type type() {
-        return null;
+    public ChessManType type() {
+        return ChessManType.ROOKS;
     }
 
     @Override
@@ -44,6 +53,16 @@ public class Rooks extends AbstractChessMan {
 
     @Override
     public Place place() {
-        return chessGame.getPlace(this);
+        return this.place;
+    }
+
+    @Override
+    public int movementNumber() {
+        return move;
+    }
+
+    @Override
+    public void setMoveNumber(int i) {
+        move = i;
     }
 }

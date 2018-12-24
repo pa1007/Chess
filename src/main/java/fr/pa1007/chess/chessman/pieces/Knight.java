@@ -1,35 +1,42 @@
 package fr.pa1007.chess.chessman.pieces;
 
 import fr.pa1007.chess.chessman.AbstractChessMan;
+import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.game.Game;
-import fr.pa1007.chess.utils.Pattern;
+import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import fr.pa1007.chess.utils.Type;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 public class Knight extends AbstractChessMan {
 
-    public Knight(Game chessGame, Rectangle graph, Place place) {
-        super(chessGame, graph, place);
-        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/Knight.png")));
+    private final MovePattern movePattern;
+    private       int         move;
+
+    public Knight(Game chessGame, Rectangle graph, Place place, Player player) {
+        super(chessGame, graph, place, player);
+        this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/"
+                                                      + player.getTeam().toLowerCase()
+                                                      + "/Knight.png")));
+        this.graph.setUserData(this);
+        this.movePattern = new MovePattern(this);
     }
 
     @Override
-    public Pattern movePattern(Player player) {
-        return null;
+    public MovePattern movePattern() {
+        return this.movePattern;
     }
 
     @Override
-    public void move() {
-
+    public Rectangle getGraphicRep() {
+        return graph;
     }
 
     @Override
-    public Type type() {
-        return null;
+    public ChessManType type() {
+        return ChessManType.KNIGHT;
     }
 
     @Override
@@ -44,6 +51,29 @@ public class Knight extends AbstractChessMan {
 
     @Override
     public Place place() {
-        return null;
+        return place;
+    }
+
+    @Override
+    public int movementNumber() {
+        return move;
+    }
+
+    @Override
+    public void setMoveNumber(int i) {
+        move = i;
+    }
+
+    public Place[] getPlacesToMove() {
+        Place[] places = new Place[8];
+        places[0] = place.more(2, 1);
+        places[1] = place.more(2, -1);
+        places[2] = place.more(-2, -1);
+        places[3] = place.more(-2, 1);
+        places[4] = place.more(1, 2);
+        places[5] = place.more(-1, 2);
+        places[6] = place.more(-1, -2);
+        places[7] = place.more(1, -2);
+        return places;
     }
 }
