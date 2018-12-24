@@ -1,22 +1,28 @@
 package fr.pa1007.chess.chessman;
 
-import fr.pa1007.chess.utils.Pattern;
+import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import fr.pa1007.chess.utils.Type;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 public interface ChessMan {
 
-    Pattern movePattern(Player player);
+    MovePattern movePattern();
 
-    void move();
+    Rectangle getGraphicRep();
 
-    Type type();
+    ChessManType type();
 
     int remaining();
 
     Image getImage();
 
     Place place();
+
+    int movementNumber();
+
+    Player getPlayer();
+
+    void setMoveNumber(int i);
 }
