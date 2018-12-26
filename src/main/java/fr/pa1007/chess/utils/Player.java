@@ -60,4 +60,8 @@ public class Player {
     public void setTeam(String team) {
         this.team = team;
     }
+
+    public String getNumber() {
+        return this.team.contains("Black") ? "2" : "1";
+    }
 }
