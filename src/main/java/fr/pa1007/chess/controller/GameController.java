@@ -5,6 +5,7 @@ import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.chessman.pieces.*;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.handler.ChessMoveEventHandler;
+import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
 import javafx.scene.Node;
@@ -72,6 +73,8 @@ public class GameController {
         initChess();
         board.setBackground(new Background(new BackgroundImage(new Image(
                 "/fr/pa1007/chess/display/playgroundImage.png"), BackgroundRepeat.NO_REPEAT, null, null, null)));
+        GameStatePattern gSP = new GameStatePattern(game, player1, null);
+        System.out.println(gSP.getPattern());
 
     }
 
@@ -209,7 +212,7 @@ public class GameController {
                     }
                 }
 
-                if (canDo && !teamPLay) {
+                if (canDo && (!teamPLay || cM.type() == ChessManType.KNIGHT)) {
                     board.add(helpR, column, row);
                     System.out.println("Help added to :" + place);
                     helpPlace = true;
@@ -219,6 +222,9 @@ public class GameController {
     }
 
 
+    /**
+     * This method inti all the chess, and give acces to all player on part of the board, and add the image on the rectangle
+     */
     private void initChess() {
         this.p1List = new ArrayList<>();
         this.player1 = new Player("Black");
