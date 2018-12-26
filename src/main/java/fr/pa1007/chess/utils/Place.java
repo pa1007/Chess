@@ -1,5 +1,6 @@
 package fr.pa1007.chess.utils;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -208,6 +209,52 @@ public class Place {
     private void generatePlace() {
         column = String.valueOf(name.charAt(0));
         row = Character.digit(name.charAt(1), 10);
+    }
+
+    public static Place[] getAllPieces() {
+        String[] apha   = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+        Place[]  places = new Place[64];
+        int      c      = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int z = 1; z < 9; z++) {
+                places[c] = new Place(apha[i], z);
+                c++;
+            }
+        }
+        return places;
+    }
+
+    public static Place[] getAllPiecesOrderByRow() {
+        Place[]  places = new Place[64];
+        String[] apha   = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
+        int      c      = 0;
+        for (int i = 1; i < 9; i++) {
+            for (int z = 0; z < 8; z++) {
+                places[c] = new Place(apha[z], i);
+                c++;
+            }
+        }
+        return places;
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Place)) {
+            return false;
+        }
+        Place place = (Place) o;
+        return row == place.row &&
+               Objects.equal(name, place.name) &&
+               Objects.equal(column, place.column);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name, column, row);
     }
 
     @Override
