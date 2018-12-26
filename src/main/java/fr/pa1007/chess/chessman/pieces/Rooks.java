@@ -65,4 +65,9 @@ public class Rooks extends AbstractChessMan {
     public void setMoveNumber(int i) {
         move = i;
     }
+
+    @Override
+    public String toString() {
+        return "R" + place.getRow() + player.getNumber();
+    }
 }

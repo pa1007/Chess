@@ -76,4 +76,9 @@ public class Knight extends AbstractChessMan {
         places[7] = place.more(1, -2);
         return places;
     }
+
+    @Override
+    public String toString() {
+        return "KN" + place.getRow() + player.getNumber();
+    }
 }

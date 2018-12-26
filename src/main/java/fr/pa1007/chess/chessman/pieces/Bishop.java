@@ -65,4 +65,9 @@ public class Bishop extends AbstractChessMan {
     public MovePattern movePattern() {
         return this.movePattern;
     }
+
+    @Override
+    public String toString() {
+        return "B" + place.getRow() + player.getNumber();
+    }
 }

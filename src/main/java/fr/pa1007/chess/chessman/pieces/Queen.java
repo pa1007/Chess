@@ -65,4 +65,9 @@ public class Queen extends AbstractChessMan {
     public void setMoveNumber(int i) {
         move = i;
     }
+
+    @Override
+    public String toString() {
+        return "Q" + place.getRow() + player.getNumber();
+    }
 }

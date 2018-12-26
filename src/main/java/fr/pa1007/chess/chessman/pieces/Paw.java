@@ -65,4 +65,8 @@ public class Paw extends AbstractChessMan {
         move = i;
     }
 
+    @Override
+    public String toString() {
+        return "P" + place.getRow() + player.getNumber();
+    }
 }

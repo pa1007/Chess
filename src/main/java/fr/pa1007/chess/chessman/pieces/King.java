@@ -65,4 +65,10 @@ public class King extends AbstractChessMan {
     public void setMoveNumber(int i) {
         move = i;
     }
+
+
+    @Override
+    public String toString() {
+        return "K" + place.getRow() + player.getNumber();
+    }
 }
