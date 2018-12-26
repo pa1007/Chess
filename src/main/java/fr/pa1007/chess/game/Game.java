@@ -2,7 +2,7 @@ package fr.pa1007.chess.game;
 
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.ChessManType;
-import fr.pa1007.chess.utils.Pattern;
+import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
 import java.util.HashMap;
@@ -20,7 +20,8 @@ public class Game {
      * @param game the game to copy from
      */
     public Game(Game game) {
-
+        this.graphic = new HashMap<>(game.graphic);
+        this.deadMap = new HashMap<>(game.deadMap);
     }
 
 
@@ -57,7 +58,7 @@ public class Game {
         return this.deadMap;
     }
 
-    public static Pattern getPatternFrom(Player player) {
+    public static GameStatePattern getPatternFrom(Player player) {
         return null;
     }
 }
