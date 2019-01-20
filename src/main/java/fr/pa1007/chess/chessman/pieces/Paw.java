@@ -86,4 +86,19 @@ public class Paw extends AbstractChessMan {
     public String toString() {
         return "P" + place.getRow() + player.getNumber();
     }
+
+    public Place[] getDiagonal() {
+        Place[] places = new Place[2];
+        switch (player.getTeam().toLowerCase()) {
+            case "white":
+                places[0] = place.more(1, 1);
+                places[1] = place.more(1, -1);
+                break;
+            case "black":
+                places[0] = place.more(-1, -1);
+                places[1] = place.more(-1, 1);
+                break;
+        }
+        return places;
+    }
 }
