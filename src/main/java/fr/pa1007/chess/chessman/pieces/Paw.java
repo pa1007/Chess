@@ -66,6 +66,29 @@ public class Paw extends AbstractChessMan {
     }
 
     @Override
+    public Place[] generateMovePlace() {
+        switch (movePattern.getPattern()) {
+            case "|":
+                if (this.player.getTeam().equalsIgnoreCase("black")) {
+                    return new Place[]{this.place.more(-1, 0)};
+                }
+                else {
+                    return new Place[]{this.place.more(1, 0)};
+                }
+            case "||":
+                if (this.player.getTeam().equalsIgnoreCase("black")) {
+                    return new Place[]{this.place.more(-1, 0), this.place.more(-2, 0)};
+                }
+                else {
+                    return new Place[]{this.place.more(1, 0), this.place.more(2, 0)};
+                }
+            default:
+                throw new NullPointerException("No movement pattern");
+
+        }
+    }
+
+    @Override
     public String toString() {
         return "P" + place.getRow() + player.getNumber();
     }

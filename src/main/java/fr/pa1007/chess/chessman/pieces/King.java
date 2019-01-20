@@ -66,6 +66,11 @@ public class King extends AbstractChessMan {
         move = i;
     }
 
+    @Override
+    public Place[] generateMovePlace() {
+        return place.getPlaceAround();
+    }
+
 
     @Override
     public String toString() {

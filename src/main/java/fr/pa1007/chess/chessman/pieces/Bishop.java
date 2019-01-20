@@ -62,6 +62,11 @@ public class Bishop extends AbstractChessMan {
     }
 
     @Override
+    public Place[] generateMovePlace() {
+        return place.getDiagonal();
+    }
+
+    @Override
     public MovePattern movePattern() {
         return this.movePattern;
     }

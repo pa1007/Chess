@@ -64,7 +64,8 @@ public class Knight extends AbstractChessMan {
         move = i;
     }
 
-    public Place[] getPlacesToMove() {
+    @Override
+    public Place[] generateMovePlace() {
         Place[] places = new Place[8];
         places[0] = place.more(2, 1);
         places[1] = place.more(2, -1);

@@ -8,6 +8,8 @@ import javafx.scene.shape.Rectangle;
 
 public interface ChessMan {
 
+    //todo add javadoc
+
     MovePattern movePattern();
 
     Rectangle getGraphicRep();
@@ -25,4 +27,6 @@ public interface ChessMan {
     Player getPlayer();
 
     void setMoveNumber(int i);
+
+    Place[] generateMovePlace();
 }
