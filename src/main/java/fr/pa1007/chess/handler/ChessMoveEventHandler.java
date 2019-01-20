@@ -1,6 +1,7 @@
 package fr.pa1007.chess.handler;
 
 import fr.pa1007.chess.chessman.ChessMan;
+import fr.pa1007.chess.event.type.EventTypes;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
@@ -37,7 +38,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
         int  row    = place.getRow() - 1;
         int  column = place.getColumnNumber();
         Node nodeT  = (Node) event.getTarget();
-        if (nodeT.getId().contains("eat")) {
+        if (nodeT.getId().contains("ate")) {
             System.out.println("Here");
             Player player = game.getOtherPlayer(chessMan.getPlayer());
             for (ChessMan man : game.getGraphic().get(player)) {
@@ -48,15 +49,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
                 int       r   = rI == null ? 0 : rI;
                 if (c == column && r == row) {
                     System.out.println("Found");
-                    game.getGraphic().get(player).remove(rec);
-                    if (!game.getDead().containsKey(player)) {
-                        List<ChessMan> lis = new ArrayList<>();
-                        lis.add(man);
-                        game.getDead().put(player, lis);
-                    }
-                    else {
-                        game.getDead().get(player).add(man);
-                    }
+                    game.fireEvent(EventTypes.EATPIECEEVENT, chessMan, place, man);
                     grid.getChildren().remove(rec);
                     break;
                 }
@@ -70,6 +63,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
         chessMan.place().setColumn(place.getColumn());
         int i = chessMan.movementNumber() + 1;
         chessMan.setMoveNumber(i);
+        game.fireEvent(EventTypes.PLAYERPLAYEREVENT, chessMan.getPlayer(), chessMan, place);
     }
 
 
