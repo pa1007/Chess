@@ -13,6 +13,8 @@ public class Game {
 
     private Map<Player, List<ChessMan>> graphic;
     private Map<Player, List<ChessMan>> deadMap;
+    private Player                      playerToPlayer;
+    private Listener[]                  listeners;
 
     /**
      * Constructor for copping a game
@@ -22,6 +24,7 @@ public class Game {
     public Game(Game game) {
         this.graphic = new HashMap<>(game.graphic);
         this.deadMap = new HashMap<>(game.deadMap);
+        this.playerToPlayer = game.playerToPlayer;
     }
 
 
@@ -31,6 +34,10 @@ public class Game {
     public Game(Map<Player, List<ChessMan>> graphicRepresentation) {
         this.graphic = graphicRepresentation;
         this.deadMap = new HashMap<>();
+        listeners = new Listener[]{
+                new PlayerPlayedListener(this),
+                new EatEventListenerEvent(this)
+        };
     }
 
     public Map<Player, List<ChessMan>> getGraphic() {
@@ -56,6 +63,24 @@ public class Game {
 
     public Map<Player, List<ChessMan>> getDead() {
         return this.deadMap;
+    }
+
+    public Player getPlayerToPlayer() {
+        return playerToPlayer;
+    }
+
+    public void setPlayerToPlayer(Player playerToPlayer) {
+        this.playerToPlayer = playerToPlayer;
+    }
+
+    public void fireEvent(Class<? extends Event> e, Object... objects) {
+        for (Listener listener : listeners) {
+            for (Class<?> c : listener.getClass().getInterfaces()) {
+                if (c.equals(e)) {
+                    listener.fire(objects);
+                }
+            }
+        }
     }
 
     public static GameStatePattern getPatternFrom(Player player) {
