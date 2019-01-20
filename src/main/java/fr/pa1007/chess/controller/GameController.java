@@ -97,38 +97,8 @@ public class GameController {
      * @param cM the piece clicked on
      */
     private void generateMoveHelp(ChessMan cM) {
-        switch (cM.movePattern().getPattern()) {
-            case "|":
-                if (graphicRepresentation.get(player1).contains(cM)) {
-                    this.generateGraphicRepHelp(cM, cM.place().more(-1, 0));
-                }
-                else {
-                    this.generateGraphicRepHelp(cM, cM.place().more(1, 0));
-                }
-                break;
-            case "||":
-                if (graphicRepresentation.get(player1).contains(cM)) {
-                    this.generateGraphicRepHelp(cM, cM.place().more(-1, 0), cM.place().more(-2, 0));
-                }
-                else {
-                    this.generateGraphicRepHelp(cM, cM.place().more(1, 0), cM.place().more(2, 0));
-                }
-                break;
-            case "H":
-                this.generateGraphicRepHelp(cM, cM.place().getPlaceAround());
-                break;
-            case "X":
-                this.generateGraphicRepHelp(cM, cM.place().getDiagonal());
-                break;
-            case "E":
-                this.generateGraphicRepHelp(cM, cM.place().getLines());
-                break;
-            case "L":
-                this.generateGraphicRepHelp(cM, ((Knight) cM).getPlacesToMove());
-                break;
-            case "XE":
-                this.generateGraphicRepHelp(cM, Place.getAll(cM.place().getLines(), cM.place().getDiagonal()));
-                break;
+        if (game.getPlayerToPlayer() == cM.getPlayer()) {
+            this.generateGraphicRepHelp(cM, cM.generateMovePlace());
         }
     }
 
