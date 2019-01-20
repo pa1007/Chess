@@ -30,12 +30,6 @@ public class Rooks extends AbstractChessMan {
         return this.movePattern;
     }
 
-
-    @Override
-    public Rectangle getGraphicRep() {
-        return graph;
-    }
-
     @Override
     public ChessManType type() {
         return ChessManType.ROOKS;

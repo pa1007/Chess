@@ -27,11 +27,6 @@ public class Bishop extends AbstractChessMan {
 
 
     @Override
-    public Rectangle getGraphicRep() {
-        return graph;
-    }
-
-    @Override
     public ChessManType type() {
         return ChessManType.BISHOP;
     }

@@ -58,4 +58,10 @@ public abstract class AbstractChessMan implements ChessMan {
     public Player getPlayer() {
         return player;
     }
+
+    @Override
+    public Rectangle getGraphicRep() {
+        return graph;
+    }
+
 }
