@@ -2,6 +2,10 @@ package fr.pa1007.chess.game;
 
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.ChessManType;
+import fr.pa1007.chess.event.Event;
+import fr.pa1007.chess.listener.Listener;
+import fr.pa1007.chess.listener.game.EatEventListenerEvent;
+import fr.pa1007.chess.listener.player.PlayerPlayedListener;
 import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
@@ -27,7 +31,6 @@ public class Game {
         this.playerToPlayer = game.playerToPlayer;
     }
 
-
     /**
      * @param graphicRepresentation all the pieces to use
      */
@@ -44,12 +47,12 @@ public class Game {
         return graphic;
     }
 
-    public int remaining(ChessManType chess) {
-        return 0;
+    public List<ChessMan> getActivePieces(Player player) {
+        return graphic.getOrDefault(player, null);
     }
 
-    public Place getPlace(ChessMan man) {
-        return null;
+    public int remaining(ChessManType chess) {
+        return 0;
     }
 
     public Player getOtherPlayer(Player player) {
@@ -85,5 +88,20 @@ public class Game {
 
     public static GameStatePattern getPatternFrom(Player player) {
         return null;
+    }
+
+    public int validateMove(ChessMan piece, Place start, Place end) {
+        if (piece.getPlayer() != playerToPlayer) {
+            return -3;
+        }
+        if (!piece.place().equals(start)) {
+            return -2;
+        }
+        for (Place place : piece.generateMovePlace()) {
+            if (place.equals(end)) {
+                return 0;
+            }
+        }
+        return -1;
     }
 }
