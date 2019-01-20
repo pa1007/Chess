@@ -8,7 +8,6 @@ import fr.pa1007.chess.handler.ChessMoveEventHandler;
 import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -24,6 +23,7 @@ import java.util.Map;
 
 public class GameController {
 
+    // FIXME: 20/01/2019 
     public GridPane  board;
     public Rectangle rook1w1;
     public Rectangle knight1w1;
@@ -71,6 +71,7 @@ public class GameController {
         this.graphicRepresentation = new HashMap<>();
         this.game = new Game(graphicRepresentation);
         initChess();
+        game.setPlayerToPlayer(player1);
         board.setBackground(new Background(new BackgroundImage(new Image(
                 "/fr/pa1007/chess/display/playgroundImage.png"), BackgroundRepeat.NO_REPEAT, null, null, null)));
         GameStatePattern gSP = new GameStatePattern(game, player1, null);
@@ -109,32 +110,24 @@ public class GameController {
      * @param cM   The piece clicked
      * @param here all the places in range of the movement can be a single piece or a array of piece
      */
+    //todo rework movement URGENT
     private void generateGraphicRepHelp(ChessMan cM, Place... here) {
         if (helpPlace) {
             board.getChildren().removeIf(node -> node.getId().contains("help"));
             helpPlace = false;
         }
-        Rectangle rectangle = cM.getGraphicRep();
-        Node      sav       = null;
-        Integer   columnS   = GridPane.getColumnIndex(rectangle);
-        Integer   rowS      = GridPane.getRowIndex(rectangle);
-        boolean   second    = false;
-        boolean   teamPLay  = false;
+        boolean second   = false;
+        boolean teamPLay = false;
         for (Place place : here) {
+            Rectangle helpR = createRectangle();
             if (place != null && place.is("P6")) {
                 second = false;
                 teamPLay = false;
             }
             if (place != null && !place.is("P6")) {
-                Rectangle helpR = new Rectangle(150, 120);
-                helpR.setOnMouseClicked(new ChessMoveEventHandler(place, cM, board, game));
-                helpR.setFill(Color.YELLOW);
-                helpR.setOpacity(0.5);
-                helpR.setId("help");
                 int     row    = place.getRow() - 1;
                 int     column = place.getColumnNumber();
                 boolean canDo  = true;
-
                 for (ChessMan man : graphicRepresentation.get(cM.getPlayer())) {
                     Rectangle rec = man.getGraphicRep();
                     Integer   cI  = GridPane.getColumnIndex(rec);
@@ -152,12 +145,12 @@ public class GameController {
                     if (second && cM.type() == ChessManType.KNIGHT) {
                         second = false;
                     }
-                    if (!second) {
+                    if (!second && cM.type() != ChessManType.PAW) {
                         for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
                             Rectangle rec = man.getGraphicRep();
                             Integer   cI  = GridPane.getColumnIndex(rec);
                             Integer   rI  = GridPane.getRowIndex(rec);
-                            helpR.setId("help!eat");
+                            helpR.setId("help!ate");
                             int c = cI == null ? 0 : cI;
                             int r = rI == null ? 0 : rI;
                             if (c == column && r == row) {
@@ -183,12 +176,41 @@ public class GameController {
                 }
 
                 if (canDo && (!teamPLay || cM.type() == ChessManType.KNIGHT)) {
+                    helpR.setOnMouseClicked(new ChessMoveEventHandler(place, cM, board, game));
                     board.add(helpR, column, row);
-                    System.out.println("Help added to :" + place);
                     helpPlace = true;
                 }
             }
         }
+        if (cM instanceof Paw) {
+            for (Place place : ((Paw) cM).getDiagonal()) {
+                if (!place.is("P6")) {
+                    for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
+                        Rectangle rec = man.getGraphicRep();
+                        Integer   cI  = GridPane.getColumnIndex(rec);
+                        Integer   rI  = GridPane.getRowIndex(rec);
+                        int       c   = cI == null ? 0 : cI;
+                        int       r   = rI == null ? 0 : rI;
+                        if (c == place.getColumnNumber() && r == place.getRow() - 1) {
+                            Rectangle helpR = createRectangle();
+                            helpR.setId("help!ate");
+                            helpR.setOnMouseClicked(new ChessMoveEventHandler(place, cM, board, game));
+                            board.add(helpR, place.getColumnNumber(), place.getRow() - 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private Rectangle createRectangle() {
+        Rectangle helpR = new Rectangle(150, 120);
+        helpR.setFill(Color.YELLOW);
+        helpR.setOpacity(0.5);
+        helpR.setId("help");
+        return helpR;
     }
 
 
