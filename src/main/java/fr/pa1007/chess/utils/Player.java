@@ -1,7 +1,16 @@
 package fr.pa1007.chess.utils;
 
+import fr.pa1007.chess.AI;
+
 public class Player {
 
+
+    /**
+     * The instance of the ai if the player is an IA or will be null if not.
+     *
+     * @since 1.0
+     */
+    private AI aiInstance;
 
     /**
      * If the player is an ia or nor.
@@ -22,11 +31,20 @@ public class Player {
     }
 
     /**
+     * @return The instance of the ai if the player is an IA or will be null if not.
+     *
+     * @since 1.0
+     */
+    public AI getAiInstance() {
+        return this.aiInstance;
+    }
+
+    /**
      * @return If the player is an ia or nor.
      *
      * @since 1.0
      */
-    public boolean getIa() {
+    public boolean isIa() {
         return this.ia;
     }
 
@@ -37,8 +55,9 @@ public class Player {
      *
      * @since 1.0
      */
-    public void setIa(boolean ia) {
+    public void setIa(boolean ia, AI instance) {
         this.ia = ia;
+        this.aiInstance = instance;
     }
 
     /**
