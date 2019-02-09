@@ -53,5 +53,9 @@ public class PlayerPlayedListener extends AbstractListener implements PlayerPlay
         Player next = gameInstance.getOtherPlayer(player);
         gameInstance.setPlayerToPlayer(next);
         System.out.println(player.getTeam() + " has played with " + man + " At " + at);
+        // AI integration
+        if (next.isIa()) {
+            next.getAiInstance().play();
+        }
     }
 }
