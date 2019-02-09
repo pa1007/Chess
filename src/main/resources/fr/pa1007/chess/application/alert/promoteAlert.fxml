@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+          minWidth="-Infinity" prefHeight="335.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/8"
+          fx:controller="fr.pa1007.chess.controller.AlertPromoteControler">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="48.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="48.0" minHeight="48.0" prefHeight="48.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <ImageView fx:id="queenI" fitHeight="95.0" fitWidth="98.0" onMouseClicked="#queenHandler" pickOnBounds="true"
+                   preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2"
+                   GridPane.rowSpan="2"/>
+        <ImageView fx:id="rookI" fitHeight="95.0" fitWidth="97.0" onMouseClicked="#rookHandler" pickOnBounds="true"
+                   preserveRatio="true" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2"
+                   GridPane.rowSpan="2"/>
+        <ImageView fx:id="bishopI" fitHeight="96.0" fitWidth="95.0" onMouseClicked="#bishiopHandler" pickOnBounds="true"
+                   preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4"
+                   GridPane.rowSpan="2"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Promote your PAW : " wrappingWidth="258.13671875"
+              GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <font>
+                <Font size="26.0"/>
+            </font>
+        </Text>
+        <ImageView fx:id="knightI" fitHeight="99.0" fitWidth="96.0" onMouseClicked="#knightHandler" pickOnBounds="true"
+                   preserveRatio="true" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4"
+                   GridPane.rowSpan="2"/>
+    </children>
+</GridPane>
