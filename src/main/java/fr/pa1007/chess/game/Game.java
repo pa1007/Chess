@@ -15,9 +15,21 @@ import java.util.Map;
 
 public class Game {
 
+    /**
+     * The graphic representation of the game
+     */
     private Map<Player, List<ChessMan>> graphic;
+    /**
+     * The death list of piece
+     */
     private Map<Player, List<ChessMan>> deadMap;
+    /**
+     * The player who need to play
+     */
     private Player                      playerToPlayer;
+    /**
+     * All the listeners, if you want to add some, add them in the constructor
+     */
     private Listener[]                  listeners;
 
     /**
@@ -29,9 +41,12 @@ public class Game {
         this.graphic = new HashMap<>(game.graphic);
         this.deadMap = new HashMap<>(game.deadMap);
         this.playerToPlayer = game.playerToPlayer;
+        this.listeners = game.listeners;
     }
 
     /**
+     * Main constructor,
+     *
      * @param graphicRepresentation all the pieces to use
      */
     public Game(Map<Player, List<ChessMan>> graphicRepresentation) {
@@ -43,18 +58,49 @@ public class Game {
         };
     }
 
+    /**
+     * Getter of all the piece from the game, stored by player
+     *
+     * @return all the piece object
+     */
     public Map<Player, List<ChessMan>> getGraphic() {
         return graphic;
     }
 
+    /**
+     * Get a list of the active piece of a player
+     *
+     * @param player The player to get the pieces
+     * @return list of piece or null if the player doesn't exist
+     */
     public List<ChessMan> getActivePieces(Player player) {
         return graphic.getOrDefault(player, null);
     }
 
+    /**
+     * Get all the remaining similar piece on the board
+     *
+     * @param chess {@link fr.pa1007.chess.chessman.ChessManType ChessManType} The type of the piece search
+     * @return a number of the remaining piece like the one in param
+     */
     public int remaining(ChessManType chess) {
-        return 0;
+        int i = 0;
+        for (List<ChessMan> mans : getGraphic().values()) {
+            for (ChessMan man : mans) {
+                if (man.type().equals(chess)) {
+                    i++;
+                }
+            }
+        }
+        return i;
     }
 
+    /**
+     * To get the enemy of a given player
+     *
+     * @param player the {@link fr.pa1007.chess.utils.Player Player} you want the enemy
+     * @return a player
+     */
     public Player getOtherPlayer(Player player) {
         for (Player player1 : graphic.keySet()) {
             if (player != player1) {
@@ -64,18 +110,39 @@ public class Game {
         return null;
     }
 
+    /**
+     * Get all the dead pieces of the game
+     *
+     * @return a map of list, stored by player
+     */
     public Map<Player, List<ChessMan>> getDead() {
         return this.deadMap;
     }
 
+    /**
+     * @return The current player to play
+     */
     public Player getPlayerToPlayer() {
         return playerToPlayer;
     }
 
+    /**
+     * Setter of the player that will need to play
+     *
+     * @param playerToPlayer the player that need to play
+     */
     public void setPlayerToPlayer(Player playerToPlayer) {
         this.playerToPlayer = playerToPlayer;
     }
 
+    /**
+     * Method used for fired event
+     * <br>
+     * <strong>WILL BE CHANGE LATER</strong>
+     *
+     * @param e       The event you want to launch
+     * @param objects All the object given for running the thing
+     */
     public void fireEvent(Class<? extends Event> e, Object... objects) {
         for (Listener listener : listeners) {
             for (Class<?> c : listener.getClass().getInterfaces()) {
@@ -84,10 +151,6 @@ public class Game {
                 }
             }
         }
-    }
-
-    public static GameStatePattern getPatternFrom(Player player) {
-        return null;
     }
 
     public int validateMove(ChessMan piece, Place start, Place end) {
@@ -103,5 +166,9 @@ public class Game {
             }
         }
         return -1;
+    }
+
+    public static GameStatePattern getPatternFrom(Player player) {
+        return null;
     }
 }
