@@ -8,7 +8,7 @@ import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
 
 /**
- * This is the listener for the event {@link fr.pa1007.chess.event.game.PlayerPlayedEvent PlayerPlayedEvent} who is implemented here
+ * This is the listener for the event {@link PlayerPlayedEvent PlayerPlayedEvent} who is implemented here
  */
 public class PlayerPlayedListener extends AbstractListener implements PlayerPlayedEvent {
 
@@ -32,7 +32,7 @@ public class PlayerPlayedListener extends AbstractListener implements PlayerPlay
     }
 
     /**
-     * The methods fired by the game {@link fr.pa1007.chess.game.Game#fireEvent(Class, Object...)}
+     * The methods fired by the game {@link Game#fireEvent(Class, Object...)}
      *
      * @param objects all the object the Event need
      */
@@ -50,7 +50,8 @@ public class PlayerPlayedListener extends AbstractListener implements PlayerPlay
      */
     @Override
     public void playerPlayed(Player player, ChessMan man, Place at) {
-        gameInstance.setPlayerToPlayer(gameInstance.getOtherPlayer(player));
+        Player next = gameInstance.getOtherPlayer(player);
+        gameInstance.setPlayerToPlayer(next);
         System.out.println(player.getTeam() + " has played with " + man + " At " + at);
     }
 }

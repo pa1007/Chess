@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is the listener for the event {@link fr.pa1007.chess.event.game.EatChessPieceEvent EatChessPieceEvent} who is implemented here
+ * This is the listener for the event {@link EatChessPieceEvent EatChessPieceEvent} who is implemented here
  */
 public class EatEventListenerEvent extends AbstractListener implements EatChessPieceEvent {
 
@@ -50,7 +50,7 @@ public class EatEventListenerEvent extends AbstractListener implements EatChessP
     }
 
     /**
-     * The methods fired by the game {@link fr.pa1007.chess.game.Game#fireEvent(Class, Object...)}
+     * The methods fired by the game {@link Game#fireEvent(Class, Object...)}
      *
      * @param objects all the object the Event need
      */
