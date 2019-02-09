@@ -1,13 +1,12 @@
 package fr.pa1007.chess.controller;
 
+import fr.pa1007.chess.ai.guess.part.GuessPart;
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.chessman.pieces.*;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.handler.ChessMoveEventHandler;
-import fr.pa1007.chess.utils.GameStatePattern;
-import fr.pa1007.chess.utils.Place;
-import fr.pa1007.chess.utils.Player;
+import fr.pa1007.chess.utils.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -119,15 +118,18 @@ public class GameController {
         boolean second   = false;
         boolean teamPLay = false;
         for (Place place : here) {
-            Rectangle helpR = createRectangle();
-            if (place != null && place.is("P6")) {
-                second = false;
-                teamPLay = false;
-            }
-            if (place != null && !place.is("P6")) {
+            if (!place.is("P8")) {
+                if (place.is("P6")) {
+                    second = false;
+                    teamPLay = false;
+                    continue;
+                }
+                Rectangle helpR = createRectangle();
+
                 int     row    = place.getRow() - 1;
                 int     column = place.getColumnNumber();
                 boolean canDo  = true;
+                /* Look for Team mate on the place */
                 for (ChessMan man : graphicRepresentation.get(cM.getPlayer())) {
                     Rectangle rec = man.getGraphicRep();
                     Integer   cI  = GridPane.getColumnIndex(rec);
@@ -140,11 +142,15 @@ public class GameController {
                         break;
                     }
                 }
+                /* If team mate , you cannot do something until P6 */
+
 
                 if (canDo) {
+                    /* Remove the second boolean if cm is Knight */
                     if (second && cM.type() == ChessManType.KNIGHT) {
                         second = false;
                     }
+                    /* Check if the other player has a piece on the capable movement */
                     if (!second && cM.type() != ChessManType.PAW) {
                         for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
                             Rectangle rec = man.getGraphicRep();
@@ -160,7 +166,7 @@ public class GameController {
                         }
 
                     }
-                    else {
+                    else if (cM.type() != ChessManType.QUEEN) {
                         for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
                             Rectangle rec = man.getGraphicRep();
                             Integer   cI  = GridPane.getColumnIndex(rec);
@@ -173,6 +179,9 @@ public class GameController {
                             }
                         }
                     }
+                    else {
+                        continue;
+                    }
                 }
 
                 if (canDo && (!teamPLay || cM.type() == ChessManType.KNIGHT)) {
@@ -182,9 +191,9 @@ public class GameController {
                 }
             }
         }
-        if (cM instanceof Paw) {
+        if (cM instanceof Paw && !((Paw) cM).isPromoted()) {
             for (Place place : ((Paw) cM).getDiagonal()) {
-                if (!place.is("P6")) {
+                if (place != null && !place.is("P6")) {
                     for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
                         Rectangle rec = man.getGraphicRep();
                         Integer   cI  = GridPane.getColumnIndex(rec);
