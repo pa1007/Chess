@@ -12,8 +12,6 @@ import javafx.scene.shape.Rectangle;
 
 public class Paw extends AbstractChessMan {
 
-    private MovePattern movePattern;
-    private int         move;
 
     public Paw(Game chessGame, Rectangle graph, Place place, Player player) {
         super(chessGame, graph, place, player);
@@ -24,10 +22,6 @@ public class Paw extends AbstractChessMan {
         this.movePattern = new MovePattern(this);
     }
 
-    @Override
-    public MovePattern movePattern() {
-        return this.movePattern;
-    }
 
     @Override
     public ChessManType type() {
@@ -44,20 +38,6 @@ public class Paw extends AbstractChessMan {
         return null;
     }
 
-    @Override
-    public Place place() {
-        return this.place;
-    }
-
-    @Override
-    public int movementNumber() {
-        return move;
-    }
-
-    @Override
-    public void setMoveNumber(int i) {
-        move = i;
-    }
 
     @Override
     public Place[] generateMovePlace() {
@@ -83,8 +63,13 @@ public class Paw extends AbstractChessMan {
     }
 
     @Override
-    public String toString() {
-        return "P" + place.getRow() + player.getNumber();
+    public void specialMoveCheckBefore(Game game) {
+
+    }
+
+    @Override
+    public void specialMoveCheckAfter(Game game) {
+
     }
 
     public Place[] getDiagonal() {
@@ -100,5 +85,10 @@ public class Paw extends AbstractChessMan {
                 break;
         }
         return places;
+    }
+
+    @Override
+    public String toString() {
+        return "P" + "+" + place.getName() + "+" + player.getTeam();
     }
 }

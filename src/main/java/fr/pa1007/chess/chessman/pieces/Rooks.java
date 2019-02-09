@@ -12,9 +12,6 @@ import javafx.scene.shape.Rectangle;
 
 public class Rooks extends AbstractChessMan {
 
-    private final MovePattern movePattern;
-
-    private int move;
 
     public Rooks(Game chessGame, Rectangle graph, Place place, Player player) {
         super(chessGame, graph, place, player);
@@ -23,11 +20,6 @@ public class Rooks extends AbstractChessMan {
                                                       + "/Rook.png")));
         this.graph.setUserData(this);
         this.movePattern = new MovePattern(this);
-    }
-
-    @Override
-    public MovePattern movePattern() {
-        return this.movePattern;
     }
 
     @Override
@@ -50,15 +42,6 @@ public class Rooks extends AbstractChessMan {
         return this.place;
     }
 
-    @Override
-    public int movementNumber() {
-        return move;
-    }
-
-    @Override
-    public void setMoveNumber(int i) {
-        move = i;
-    }
 
     @Override
     public Place[] generateMovePlace() {
@@ -66,7 +49,17 @@ public class Rooks extends AbstractChessMan {
     }
 
     @Override
+    public void specialMoveCheckBefore(Game game) {
+
+    }
+
+    @Override
+    public void specialMoveCheckAfter(Game game) {
+
+    }
+
+    @Override
     public String toString() {
-        return "R" + place.getRow() + player.getNumber();
+        return "R" + "+" + place.getName() + "+" + player.getTeam();
     }
 }

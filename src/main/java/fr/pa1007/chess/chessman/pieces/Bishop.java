@@ -12,8 +12,6 @@ import javafx.scene.shape.Rectangle;
 
 public class Bishop extends AbstractChessMan {
 
-    private MovePattern movePattern;
-    private int         move;
 
     public Bishop(Game chessGame, Rectangle graph, Place place, Player player) {
         super(chessGame, graph, place, player);
@@ -41,20 +39,6 @@ public class Bishop extends AbstractChessMan {
         return new Image("/fr/pa1007/chess/display/black/Bishop.png");
     }
 
-    @Override
-    public Place place() {
-        return this.place;
-    }
-
-    @Override
-    public int movementNumber() {
-        return move;
-    }
-
-    @Override
-    public void setMoveNumber(int i) {
-        move = i;
-    }
 
     @Override
     public Place[] generateMovePlace() {
@@ -62,12 +46,18 @@ public class Bishop extends AbstractChessMan {
     }
 
     @Override
-    public MovePattern movePattern() {
-        return this.movePattern;
+    public void specialMoveCheckBefore(Game game) {
+
+    }
+
+    @Override
+    public void specialMoveCheckAfter(Game game) {
+
     }
 
     @Override
     public String toString() {
-        return "B" + place.getRow() + player.getNumber();
+        return "B" + "+" + place.getName() + "+" + player.getTeam();
     }
+
 }
