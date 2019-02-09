@@ -43,7 +43,6 @@ public class Place {
 
     /**
      * @return The column character.
-     *
      * @since 1.0
      */
     public String getColumn() {
@@ -54,7 +53,6 @@ public class Place {
      * Sets the <code>column</code> field.
      *
      * @param column The column character.
-     *
      * @since 1.0
      */
     public void setColumn(String column) {
@@ -64,7 +62,6 @@ public class Place {
 
     /**
      * @return The row number.
-     *
      * @since 1.0
      */
     public int getRow() {
@@ -75,7 +72,6 @@ public class Place {
      * Sets the <code>row</code> field.
      *
      * @param row The row number.
-     *
      * @since 1.0
      */
     public void setRow(int row) {
@@ -85,7 +81,6 @@ public class Place {
 
     /**
      * @return The name of the place composed of a Letter and a number.
-     *
      * @since 1.0
      */
     public String getName() {
@@ -96,7 +91,6 @@ public class Place {
      * Sets the <code>name</code> field.
      *
      * @param name The name of the place composed of a Letter and a number.
-     *
      * @since 1.0
      */
     public void setName(String name) {
@@ -110,19 +104,16 @@ public class Place {
      *
      * @param row    the amount of row to move from max 7
      * @param column the amount of column to move from max 7
-     *
-     * @return a new place with the moved column and row or null if the place is outside the board
+     * @return a new place with the moved column and row or P8 if the place is outside the board
      */
     public Place more(int row, int column) {
         int tempR = this.row + row;
         int tempC = (int) this.column.toLowerCase().charAt(0) + column;
         if (tempR > 8 || tempR < 1) {
-            System.out.println(tempR);
-            return null;
+            return new Place("P8");
         }
         if (tempC > 104 || tempC < 97) {
-            System.out.println(tempC);
-            return null;
+            return new Place("P8");
         }
         return new Place(String.valueOf(Character.valueOf((char) tempC)), tempR);
     }
