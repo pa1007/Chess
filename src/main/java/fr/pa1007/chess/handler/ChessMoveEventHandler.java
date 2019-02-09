@@ -10,8 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
 
@@ -35,6 +33,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
      */
     @Override
     public void handle(MouseEvent event) {
+        chessMan.specialMoveCheckBefore(game);
         int  row    = place.getRow() - 1;
         int  column = place.getColumnNumber();
         Node nodeT  = (Node) event.getTarget();
@@ -61,8 +60,8 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
         grid.add(chessMan.getGraphicRep(), column, row);
         chessMan.place().setRow(place.getRow());
         chessMan.place().setColumn(place.getColumn());
-        int i = chessMan.movementNumber() + 1;
-        chessMan.setMoveNumber(i);
+        chessMan.setMoveNumber(chessMan.movementNumber() + 1);
+        chessMan.specialMoveCheckAfter(game);
         game.fireEvent(EventTypes.PLAYERPLAYEREVENT, chessMan.getPlayer(), chessMan, place);
     }
 
