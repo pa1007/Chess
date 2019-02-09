@@ -78,4 +78,18 @@ public interface ChessMan {
      * @return a tab of Place, with the place <code>P6</code> for given separator
      */
     Place[] generateMovePlace();
+
+    /**
+     * Make a special check <strong>BEFORE</strong> the move is made
+     *
+     * @param game the current game state
+     */
+    void specialMoveCheckBefore(Game game);
+
+    /**
+     * Make a special check <strong>After</strong> the move is made
+     *
+     * @param game the current game state
+     */
+    void specialMoveCheckAfter(Game game);
 }
