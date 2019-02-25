@@ -1,6 +1,6 @@
 package fr.pa1007.chess.controller;
 
-import fr.pa1007.chess.chessman.ChessManType;
+import fr.pa1007.chess.chessman.utils.ChessManType;
 import fr.pa1007.chess.chessman.pieces.Paw;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -19,16 +19,16 @@ public class AlertPromoteControler {
     public void init(Paw paw) {
         this.paw = paw;
         queenI.setImage(new Image("fr/pa1007/chess/display/"
-                                  + paw.getPlayer().getTeam().toLowerCase()
+                                  + paw.getPlayer().getTeamName().toLowerCase()
                                   + "/Queen.png"));
         bishopI.setImage(new Image("fr/pa1007/chess/display/"
-                                   + paw.getPlayer().getTeam().toLowerCase()
+                                   + paw.getPlayer().getTeamName().toLowerCase()
                                    + "/Bishop.png"));
         knightI.setImage(new Image("fr/pa1007/chess/display/"
-                                   + paw.getPlayer().getTeam().toLowerCase()
+                                   + paw.getPlayer().getTeamName().toLowerCase()
                                    + "/Knight.png"));
         rookI.setImage(new Image("fr/pa1007/chess/display/"
-                                 + paw.getPlayer().getTeam().toLowerCase()
+                                 + paw.getPlayer().getTeamName().toLowerCase()
                                  + "/Rook.png"));
 
     }
