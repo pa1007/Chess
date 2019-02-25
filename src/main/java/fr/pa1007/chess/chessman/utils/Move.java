@@ -4,6 +4,8 @@ import fr.pa1007.chess.chessman.pieces.Paw;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is for simplifying the "Can this piece go here or not", this help to be more clear and do only 1 time all the finding of enemy and moving state
@@ -16,25 +18,22 @@ public class Move {
     }
 
     public static Place[] getKingPossibleMove(Game game, Place startPlace, Player player) {
-        Place[] p      = startPlace.getPlaceAround();
-        Place[] places = new Place[p.length];
-        int     nb     = 0;
+        Place[]     p      = startPlace.getPlaceAround();
+        List<Place> places = new ArrayList<>();
         for (Place place : p) {
             if (!place.is("P6")) {
                 int r = game.pieceAtThisPlace(place);
                 if (r == 0) {
-                    places[nb] = place;
-                    nb++;
+                    places.add(place);
                 }
                 else {
                     if (player.getNumber() != r) {
-                        places[nb] = place;
-                        nb++;
+                        places.add(place);
                     }
                 }
             }
         }
-        return places;
+        return places.toArray(new Place[0]);
     }
 
     public static Place[] getKnightPossibleMove(Game game, Place startPlace, Player player) {
@@ -96,25 +95,19 @@ public class Move {
     }
 
     private static Place[] getPlaces(Game game, Player player, Place[] allPossiblePlace) {
-        Place[] places = new Place[allPossiblePlace.length];
-        int     nb     = 0;
-        boolean second = false, behind = false;
+        List<Place> places = new ArrayList<>();
+        boolean     behind = false;
         for (Place place : allPossiblePlace) {
             if (!place.is("P6")) {
                 if (!behind) {
                     int r = game.pieceAtThisPlace(place);
                     if (r == 0) {
-                        places[nb] = place;
-                        nb++;
+                        places.add(place);
                     }
                     else {
                         if (player.getNumber() != r) {
-                            if (!second) {
-                                places[nb] = place;
-                                nb++;
-                                second = true;
-                                behind = true;
-                            }
+                            places.add(place);
+                            behind = true;
                         }
                         else {
                             behind = true;
@@ -123,10 +116,9 @@ public class Move {
                 }
             }
             else {
-                second = false;
                 behind = false;
             }
         }
-        return places;
+        return places.toArray(new Place[0]);
     }
 }
