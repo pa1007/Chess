@@ -1,10 +1,10 @@
 package fr.pa1007.chess.utils;
 
+import fr.pa1007.chess.ai.guess.part.CompleteGuessPart;
+import fr.pa1007.chess.ai.guess.part.Part;
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.game.Game;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public class GameStatePattern {
@@ -36,23 +36,30 @@ public class GameStatePattern {
      *
      * @since 1.0
      */
-    private String               pattern;
+    private CompleteGuessPart    pattern;
     private Map<Place, ChessMan> placeMap;
 
     public GameStatePattern(Game game, Player player, ChessMan chessMan) {
         this.game = new Game(game);
+        this.placeMap = game.getMap();
         this.player = player;
         this.mainPiece = chessMan;
-        this.placeMap = this.generatePlaceMap();
+        this.pattern = this.generatePattern();
+    }
+
+    public GameStatePattern(Game game, ChessMan chessMan) {
+        this.game = new Game(game);
+        this.placeMap = game.getMap();
+        this.player = chessMan.getPlayer();
+        this.mainPiece = chessMan;
         this.pattern = this.generatePattern();
     }
 
     /**
      * @return The pattern of the game.
-     *
      * @since 1.0
      */
-    public String getPattern() {
+    public CompleteGuessPart getPattern() {
         return this.pattern;
     }
 
@@ -60,16 +67,14 @@ public class GameStatePattern {
      * Sets the <code>pattern</code> field.
      *
      * @param pattern The pattern of the game.
-     *
      * @since 1.0
      */
-    public void setPattern(String pattern) {
+    public void setPattern(CompleteGuessPart pattern) {
         this.pattern = pattern;
     }
 
     /**
      * @return The piece from where the pattern is generated.
-     *
      * @since 1.0
      */
     public ChessMan getMainPiece() {
@@ -80,7 +85,6 @@ public class GameStatePattern {
      * Sets the <code>mainPiece</code> field.
      *
      * @param mainPiece The piece from where the pattern is generated.
-     *
      * @since 1.0
      */
     public void setMainPiece(ChessMan mainPiece) {
@@ -89,7 +93,6 @@ public class GameStatePattern {
 
     /**
      * @return The player from where the pattern emit.
-     *
      * @since 1.0
      */
     public Player getPlayer() {
@@ -100,7 +103,6 @@ public class GameStatePattern {
      * Sets the <code>player</code> field.
      *
      * @param player The player from where the pattern emit.
-     *
      * @since 1.0
      */
     public void setPlayer(Player player) {
@@ -109,7 +111,6 @@ public class GameStatePattern {
 
     /**
      * @return The game where the pattern is from.
-     *
      * @since 1.0
      */
     public Game getGame() {
@@ -120,45 +121,45 @@ public class GameStatePattern {
      * Sets the <code>game</code> field.
      *
      * @param game The game where the pattern is from.
-     *
      * @since 1.0
      */
     public void setGame(Game game) {
         this.game = game;
     }
 
-    private Map<Place, ChessMan> generatePlaceMap() {
-        Place[]              places = Place.getAllPieces();
-        Map<Place, ChessMan> map    = new HashMap<>();
-        for (Place place : places) {
-            map.put(place, null);
-        }
-        Collection<List<ChessMan>> col = game.getGraphic().values();
-        for (List<ChessMan> man : col) {
-            for (ChessMan na : man) {
-                map.put(na.place(), na);
-            }
-        }
-        return map;
+    public Map<Place, ChessMan> getPlaceMap() {
+        return placeMap;
     }
 
-    private String generatePattern() {
-        Place[]       places = Place.getAllPiecesOrderByRow();
-        StringBuilder sb     = new StringBuilder();
+    public void setPlaceMap(Map<Place, ChessMan> placeMap) {
+        this.placeMap = placeMap;
+    }
 
+
+    //Maybe change with List the 2nd part
+    private CompleteGuessPart generatePattern() {
+        CompleteGuessPart part = new CompleteGuessPart(player);
+
+        Place[]  places = Place.getAllPiecesOrderByRow();
+        int      lastC  = 1, c = 0;
+        String[] row    = new String[8];
         for (Place place : places) {
-            sb.append(this.placeMap.get(place) == null ? "*" : this.placeMap.get(place));
-            sb.append(place.is("H1")
-                      || place.is("H2")
-                      || place.is("H3")
-                      || place.is("H4")
-                      || place.is("H5")
-                      || place.is("H6")
-                      || place.is("H7")
-                      || place.is("H8") ? place.is("H8") ? "!" : "," : "-");
+            if (place.getRow() == lastC) {
+                ChessMan m = placeMap.get(place);
+                row[c] = m == null ? "*" : m.toString();
+                c++;
+            }
+            else {
+                c = 1;
+                part.setRow(lastC, new Part(Arrays.copyOf(row, row.length), String.valueOf(lastC)));
+                row = new String[8];
+                lastC = place.getRow();
+                ChessMan m = placeMap.get(place);
+                row[0] = m == null ? "*" : m.toString();
+            }
         }
 
 
-        return sb.toString();
+        return part;
     }
 }

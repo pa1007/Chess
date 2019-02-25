@@ -2,7 +2,6 @@ package fr.pa1007.chess.ai.guess;
 
 import fr.pa1007.chess.ai.builder.GuessBuilder;
 import fr.pa1007.chess.chessman.ChessMan;
-import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 
 public class Guess {
@@ -31,7 +30,7 @@ public class Guess {
      *
      * @since 1.0
      */
-    private MovePattern movePattern;
+    private GuessPattern movePattern;
 
     /**
      * The ending place.
@@ -65,7 +64,7 @@ public class Guess {
     public Guess(
             int[][] rawResult,
             ChessMan piece,
-            MovePattern movePattern,
+            GuessPattern movePattern,
             Place end,
             Place start,
             int guessNumber,
@@ -145,7 +144,7 @@ public class Guess {
      *
      * @since 1.0
      */
-    public MovePattern getMovePattern() {
+    public GuessPattern getGuessPattern() {
         return this.movePattern;
     }
 
@@ -156,7 +155,7 @@ public class Guess {
      *
      * @since 1.0
      */
-    public void setMovePattern(MovePattern movePattern) {
+    public void setGuessPattern(GuessPattern movePattern) {
         this.movePattern = movePattern;
     }
 

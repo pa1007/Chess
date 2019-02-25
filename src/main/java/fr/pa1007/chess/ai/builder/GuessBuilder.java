@@ -1,20 +1,20 @@
 package fr.pa1007.chess.ai.builder;
 
 import fr.pa1007.chess.ai.guess.Guess;
+import fr.pa1007.chess.ai.guess.GuessPattern;
 import fr.pa1007.chess.ai.guess.Reward;
 import fr.pa1007.chess.chessman.ChessMan;
-import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
 
 public class GuessBuilder {
 
-    private int[][]     rawResult;
-    private ChessMan    piece;
-    private MovePattern movePattern;
-    private Place       end;
-    private Place       start;
-    private int         guessNumber;
-    private Reward      reward;
+    private int[][]      rawResult;
+    private ChessMan     piece;
+    private GuessPattern guessPattern;
+    private Place        end;
+    private Place        start;
+    private int          guessNumber;
+    private Reward       reward;
 
     public GuessBuilder setRawResult(int[][] rawResult) {
         this.rawResult = rawResult;
@@ -26,8 +26,8 @@ public class GuessBuilder {
         return this;
     }
 
-    public GuessBuilder setMovePattern(MovePattern movePattern) {
-        this.movePattern = movePattern;
+    public GuessBuilder setGuessPattern(GuessPattern guessPattern) {
+        this.guessPattern = guessPattern;
         return this;
     }
 
@@ -52,6 +52,6 @@ public class GuessBuilder {
     }
 
     public Guess createGuess() {
-        return new Guess(rawResult, piece, movePattern, end, start, guessNumber, reward);
+        return new Guess(rawResult, piece, guessPattern, end, start, guessNumber, reward);
     }
 }
