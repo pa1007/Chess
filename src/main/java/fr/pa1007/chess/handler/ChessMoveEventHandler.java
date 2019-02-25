@@ -48,7 +48,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
                 int       r   = rI == null ? 0 : rI;
                 if (c == column && r == row) {
                     System.out.println("Found");
-                    game.fireEvent(EventTypes.EATPIECEEVENT, chessMan, place, man);
+                    game.fireEvent(EventTypes.EAT_CHESS_PIECE_EVENT, chessMan, place, man);
                     grid.getChildren().remove(rec);
                     break;
                 }
@@ -62,7 +62,7 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
         chessMan.place().setColumn(place.getColumn());
         chessMan.setMoveNumber(chessMan.movementNumber() + 1);
         chessMan.specialMoveCheckAfter(game);
-        game.fireEvent(EventTypes.PLAYERPLAYEREVENT, chessMan.getPlayer(), chessMan, place);
+        game.fireEvent(EventTypes.PLAYER_PLAYED_EVENT, chessMan.getPlayer(), chessMan, place);
     }
 
 
