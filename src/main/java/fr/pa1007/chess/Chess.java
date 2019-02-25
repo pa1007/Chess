@@ -1,5 +1,7 @@
 package fr.pa1007.chess;
 
+import fr.pa1007.chess.chessman.pieces.Paw;
+import fr.pa1007.chess.controller.AlertPromoteControler;
 import fr.pa1007.chess.controller.GameController;
 import fr.pa1007.chess.utils.exception.ChessOutOfBoundException;
 import javafx.application.Application;
@@ -10,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -48,5 +51,18 @@ public class Chess extends Application {
         textArea.setMaxHeight(Double.MAX_VALUE);
         alert.getDialogPane().setExpandableContent(textArea);
         alert.show();
+    }
+
+    public static void askPromotion(Paw paw) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Chess.class.getResource("/fr/pa1007/chess/application/alert/promoteAlert.fxml"));
+        Pane                  pane                = loader.load();
+        AlertPromoteControler controllerMainTable = loader.getController();
+        Stage                 stage               = new Stage();
+        controllerMainTable.init(paw);
+        stage.setScene(new Scene(pane));
+        stage.setTitle("Promote | Chess");
+        stage.setResizable(false);
+        stage.show();
     }
 }
