@@ -24,15 +24,14 @@ public class Player {
      *
      * @since 1.0
      */
-    private String team;
+    private Team team;
 
-    public Player(String team) {
+    public Player(Team team) {
         this.team = team;
     }
 
     /**
      * @return The instance of the ai if the player is an IA or will be null if not.
-     *
      * @since 1.0
      */
     public AI getAiInstance() {
@@ -41,7 +40,6 @@ public class Player {
 
     /**
      * @return If the player is an ia or nor.
-     *
      * @since 1.0
      */
     public boolean isIa() {
@@ -52,7 +50,6 @@ public class Player {
      * Sets the <code>ia</code> field.
      *
      * @param ia If the player is an ia or nor.
-     *
      * @since 1.0
      */
     public void setIa(boolean ia, AI instance) {
@@ -62,25 +59,27 @@ public class Player {
 
     /**
      * @return The team of the player.
-     *
      * @since 1.0
      */
-    public String getTeam() {
-        return this.team;
+    public String getTeamName() {
+        return this.team.getName();
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     /**
      * Sets the <code>team</code> field.
      *
      * @param team The team of the player.
-     *
      * @since 1.0
      */
-    public void setTeam(String team) {
+    public void setTeam(Team team) {
         this.team = team;
     }
 
-    public String getNumber() {
-        return this.team.contains("Black") ? "2" : "1";
+    public int getNumber() {
+        return this.team.getName().contains(Team.BLACK.getName()) ? 2 : 1;
     }
 }
