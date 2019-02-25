@@ -118,10 +118,17 @@ public class Place {
         return new Place(String.valueOf(Character.valueOf((char) tempC)), tempR);
     }
 
+
+    /**
+     * @return
+     */
     public int getColumnNumber() {
         return column.toLowerCase().charAt(0) - 'a';
     }
 
+    /**
+     * @return
+     */
     public Place[] getLines() {
         Place[] places     = new Place[8 * 4];
         int     placeCount = 0;
@@ -151,6 +158,9 @@ public class Place {
         return places;
     }
 
+    /**
+     * @return
+     */
     public Place[] getDiagonal() {
         Place[] places     = new Place[8 * 4];
         int     placeCount = 0;
@@ -180,6 +190,9 @@ public class Place {
         return places;
     }
 
+    /**
+     * @return
+     */
     public Place[] getPlaceAround() {
         Place[] places = new Place[8];
         places[0] = more(-1, -1);
@@ -193,15 +206,86 @@ public class Place {
         return places;
     }
 
+    /**
+     * @return
+     */
+    public Place[] getKnightMove() {
+        Place[] places = new Place[8];
+        places[0] = this.more(2, 1);
+        places[1] = this.more(2, -1);
+        places[2] = this.more(-2, -1);
+        places[3] = this.more(-2, 1);
+        places[4] = this.more(1, 2);
+        places[5] = this.more(-1, 2);
+        places[6] = this.more(-1, -2);
+        places[7] = this.more(1, -2);
+        return places;
+    }
+
+    /**
+     * @param p6
+     * @return
+     */
     public boolean is(String p6) {
         return name.equals(p6.toUpperCase());
     }
 
+    /**
+     * @param place
+     * @return
+     */
+    public boolean is(Place place) {
+        return name.equalsIgnoreCase(place.name);
+    }
+
+    /**
+     * @return
+     */
+    public Place[] getDiagonalBlackPaw() {
+        Place[] places = new Place[2];
+        places[0] = this.more(-1, -1);
+        places[1] = this.more(-1, 1);
+        return places;
+    }
+
+    /**
+     * @return
+     */
+    public Place[] getDiagonalWhitePaw() {
+        Place[] places = new Place[2];
+        places[0] = this.more(1, 1);
+        places[1] = this.more(1, -1);
+        return places;
+    }
+
+    /**
+     * @return
+     */
+    public Place[] getDiagonalErrorPaw() {
+        Place[] places = new Place[2];
+        places[0] = new Place("P6");
+        places[1] = new Place("P6");
+        return places;
+    }
+
+    /**
+     * @return
+     */
+    public Place[] getQueenMove() {
+       return Place.getAll(this.getLines(), this.getDiagonal());
+    }
+
+    /**
+     *
+     */
     private void generatePlace() {
         column = String.valueOf(name.charAt(0));
         row = Character.digit(name.charAt(1), 10);
     }
 
+    /**
+     * @return
+     */
     public static Place[] getAllPieces() {
         String[] apha   = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
         Place[]  places = new Place[64];
@@ -215,6 +299,9 @@ public class Place {
         return places;
     }
 
+    /**
+     * @return
+     */
     public static Place[] getAllPiecesOrderByRow() {
         Place[]  places = new Place[64];
         String[] apha   = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -229,6 +316,10 @@ public class Place {
 
     }
 
+    /**
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -243,16 +334,27 @@ public class Place {
                Objects.equal(column, place.column);
     }
 
+    /**
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(name, column, row);
     }
 
+    /**
+     * @return
+     */
     @Override
     public String toString() {
         return name;
     }
 
+    /**
+     * @param lines
+     * @param diagonal
+     * @return
+     */
     public static Place[] getAll(Place[] lines, Place[] diagonal) {
         List<Place> places = new ArrayList<>(Arrays.asList(lines));
         places.addAll(Arrays.asList(diagonal));
