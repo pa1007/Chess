@@ -1,5 +1,6 @@
 package fr.pa1007.chess.chessman;
 
+import fr.pa1007.chess.chessman.utils.ChessManType;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
@@ -26,7 +27,7 @@ public interface ChessMan {
     /**
      * The type of the piece
      *
-     * @return {@link fr.pa1007.chess.chessman.ChessManType}
+     * @return {@link ChessManType}
      */
     ChessManType type();
 
@@ -92,4 +93,11 @@ public interface ChessMan {
      * @param game the current game state
      */
     void specialMoveCheckAfter(Game game);
+
+    /**
+     * The value of the piece
+     *
+     * @return an int, the value of the piece
+     */
+    int getValue();
 }

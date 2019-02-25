@@ -1,7 +1,8 @@
 package fr.pa1007.chess.chessman.pieces;
 
 import fr.pa1007.chess.chessman.AbstractChessMan;
-import fr.pa1007.chess.chessman.ChessManType;
+import fr.pa1007.chess.chessman.utils.ChessManType;
+import fr.pa1007.chess.chessman.utils.Move;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
@@ -15,7 +16,7 @@ public class Queen extends AbstractChessMan {
     public Queen(Game chessGame, Rectangle graph, Place place, Player player) {
         super(chessGame, graph, place, player);
         this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/"
-                                                      + player.getTeam().toLowerCase()
+                                                      + player.getTeamName().toLowerCase()
                                                       + "/Queen.png")));
         this.graph.setUserData(this);
         this.movePattern = new MovePattern(this);
@@ -38,7 +39,7 @@ public class Queen extends AbstractChessMan {
 
     @Override
     public Place[] generateMovePlace() {
-        return Place.getAll(place.getLines(), place.getDiagonal());
+        return Move.getQueenPossibleMove(chessGame, place, player);
     }
 
     @Override
@@ -52,7 +53,12 @@ public class Queen extends AbstractChessMan {
     }
 
     @Override
+    public int getValue() {
+        return 9;
+    }
+
+    @Override
     public String toString() {
-        return "Q" + "+" + place.getName() + "+" + player.getTeam();
+        return "Q" + "+" + place.getName() + "+" + player.getTeamName();
     }
 }

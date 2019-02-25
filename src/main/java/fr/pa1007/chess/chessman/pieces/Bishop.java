@@ -1,7 +1,8 @@
 package fr.pa1007.chess.chessman.pieces;
 
 import fr.pa1007.chess.chessman.AbstractChessMan;
-import fr.pa1007.chess.chessman.ChessManType;
+import fr.pa1007.chess.chessman.utils.ChessManType;
+import fr.pa1007.chess.chessman.utils.Move;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.MovePattern;
 import fr.pa1007.chess.utils.Place;
@@ -16,7 +17,7 @@ public class Bishop extends AbstractChessMan {
     public Bishop(Game chessGame, Rectangle graph, Place place, Player player) {
         super(chessGame, graph, place, player);
         this.graph.setFill(new ImagePattern(new Image("fr/pa1007/chess/display/"
-                                                      + player.getTeam().toLowerCase()
+                                                      + player.getTeamName().toLowerCase()
                                                       + "/Bishop.png")));
         this.graph.setUserData(this);
         this.movePattern = new MovePattern(this);
@@ -42,7 +43,7 @@ public class Bishop extends AbstractChessMan {
 
     @Override
     public Place[] generateMovePlace() {
-        return place.getDiagonal();
+        return Move.getBishopPossibleMove(chessGame, place, player);
     }
 
     @Override
@@ -56,8 +57,13 @@ public class Bishop extends AbstractChessMan {
     }
 
     @Override
+    public int getValue() {
+        return 3;
+    }
+
+    @Override
     public String toString() {
-        return "B" + "+" + place.getName() + "+" + player.getTeam();
+        return "B" + "+" + place.getName() + "+" + player.getTeamName();
     }
 
 }
