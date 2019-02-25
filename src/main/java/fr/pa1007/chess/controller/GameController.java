@@ -2,7 +2,6 @@ package fr.pa1007.chess.controller;
 
 import fr.pa1007.chess.ai.guess.part.GuessPart;
 import fr.pa1007.chess.chessman.ChessMan;
-import fr.pa1007.chess.chessman.ChessManType;
 import fr.pa1007.chess.chessman.pieces.*;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.handler.ChessMoveEventHandler;
@@ -15,10 +14,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameController {
 
@@ -74,8 +70,8 @@ public class GameController {
         board.setBackground(new Background(new BackgroundImage(new Image(
                 "/fr/pa1007/chess/display/playgroundImage.png"), BackgroundRepeat.NO_REPEAT, null, null, null)));
         GameStatePattern gSP = new GameStatePattern(game, player1, null);
-        System.out.println(gSP.getPattern());
-
+        GuessPart[]      l   = PatternReader.explodePattern(gSP.getPattern(), player1);
+        System.out.println(Arrays.toString(l));
     }
 
     /**
@@ -115,78 +111,12 @@ public class GameController {
             board.getChildren().removeIf(node -> node.getId().contains("help"));
             helpPlace = false;
         }
-        boolean second   = false;
-        boolean teamPLay = false;
         for (Place place : here) {
-            if (!place.is("P8")) {
-                if (place.is("P6")) {
-                    second = false;
-                    teamPLay = false;
-                    continue;
-                }
-                Rectangle helpR = createRectangle();
-
-                int     row    = place.getRow() - 1;
-                int     column = place.getColumnNumber();
-                boolean canDo  = true;
-                /* Look for Team mate on the place */
-                for (ChessMan man : graphicRepresentation.get(cM.getPlayer())) {
-                    Rectangle rec = man.getGraphicRep();
-                    Integer   cI  = GridPane.getColumnIndex(rec);
-                    Integer   rI  = GridPane.getRowIndex(rec);
-                    int       c   = cI == null ? 0 : cI;
-                    int       r   = rI == null ? 0 : rI;
-                    if (c == column && r == row) {
-                        canDo = false;
-                        teamPLay = true;
-                        break;
-                    }
-                }
-                /* If team mate , you cannot do something until P6 */
-
-
-                if (canDo) {
-                    /* Remove the second boolean if cm is Knight */
-                    if (second && cM.type() == ChessManType.KNIGHT) {
-                        second = false;
-                    }
-                    /* Check if the other player has a piece on the capable movement */
-                    if (!second && cM.type() != ChessManType.PAW) {
-                        for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
-                            Rectangle rec = man.getGraphicRep();
-                            Integer   cI  = GridPane.getColumnIndex(rec);
-                            Integer   rI  = GridPane.getRowIndex(rec);
-                            helpR.setId("help!ate");
-                            int c = cI == null ? 0 : cI;
-                            int r = rI == null ? 0 : rI;
-                            if (c == column && r == row) {
-                                second = true;
-                                break;
-                            }
-                        }
-
-                    }
-                    else if (cM.type() != ChessManType.QUEEN) {
-                        for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
-                            Rectangle rec = man.getGraphicRep();
-                            Integer   cI  = GridPane.getColumnIndex(rec);
-                            Integer   rI  = GridPane.getRowIndex(rec);
-                            int       c   = cI == null ? 0 : cI;
-                            int       r   = rI == null ? 0 : rI;
-                            if (c == column && r == row) {
-                                canDo = false;
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        continue;
-                    }
-                }
-
-                if (canDo && (!teamPLay || cM.type() == ChessManType.KNIGHT)) {
+            if (place != null) {
+                if (!place.is("P8")) {
+                    Rectangle helpR = createRectangle();
                     helpR.setOnMouseClicked(new ChessMoveEventHandler(place, cM, board, game));
-                    board.add(helpR, column, row);
+                    board.add(helpR, place.getColumnNumber(), place.getRow() - 1);
                     helpPlace = true;
                 }
             }
@@ -228,14 +158,16 @@ public class GameController {
      */
     private void initChess() {
         this.p1List = new ArrayList<>();
-        this.player1 = new Player("Black");
+        this.player1 = new Player(Team.BLACK);
         p1List.add(new Rooks(this.game, rook1w1, new Place("A8"), player1));
         p1List.add(new Paw(this.game, paw1w1, new Place("A7"), player1));
         p1List.add(new Knight(this.game, knight1w1, new Place("B8"), player1));
         p1List.add(new Paw(this.game, paw1w2, new Place("B7"), player1));
         p1List.add(new Bishop(this.game, bishop1w1, new Place("C8"), player1));
         p1List.add(new Paw(this.game, paw1w3, new Place("C7"), player1));
-        p1List.add(new King(this.game, king1w1, new Place("D8"), player1));
+        ChessMan king1 = new King(this.game, king1w1, new Place("D8"), player1);
+        p1List.add(king1);
+        game.setBlackMain(king1);
         p1List.add(new Paw(this.game, paw1w4, new Place("D7"), player1));
         p1List.add(new Queen(this.game, queen1w1, new Place("E8"), player1));
         p1List.add(new Paw(this.game, paw1w5, new Place("E7"), player1));
@@ -247,7 +179,7 @@ public class GameController {
         p1List.add(new Paw(this.game, paw1w8, new Place("H7"), player1));
         this.graphicRepresentation.put(player1, p1List);
         this.p2List = new ArrayList<>();
-        this.player2 = new Player("White");
+        this.player2 = new Player(Team.WHITE);
         p2List.add(new Paw(this.game, paw2w1, new Place("A2"), player2));
         p2List.add(new Rooks(this.game, rook2w1, new Place("A1"), player2));
         p2List.add(new Paw(this.game, paw2w2, new Place("B2"), player2));
@@ -255,7 +187,9 @@ public class GameController {
         p2List.add(new Paw(this.game, paw2w3, new Place("C2"), player2));
         p2List.add(new Bishop(this.game, bishop2w1, new Place("C1"), player2));
         p2List.add(new Paw(this.game, paw2w4, new Place("D2"), player2));
-        p2List.add(new King(this.game, king2w1, new Place("D1"), player2));
+        ChessMan king2 = new King(this.game, king2w1, new Place("D1"), player2);
+        p2List.add(king2);
+        game.setWhiteMain(king2);
         p2List.add(new Queen(this.game, queen2w1, new Place("E1"), player2));
         p2List.add(new Paw(this.game, paw2w5, new Place("E2"), player2));
         p2List.add(new Bishop(this.game, bishop2w2, new Place("F1"), player2));
