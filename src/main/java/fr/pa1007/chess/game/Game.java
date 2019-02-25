@@ -275,7 +275,7 @@ public class Game {
      * @return
      */
     public int checkCheck(ChessMan from, Place place) {
-        ChessMan main = null;
+        ChessMan main;
         switch (from.getPlayer().getTeam()) {
             case BLACK:
                 main = blackMain;
@@ -286,11 +286,43 @@ public class Game {
             default:
                 throw new NullPointerException("There is an error with the team of the player ! ");
         }
-        return 0;
+        int     i   = 0;
+        Place[] all = main.generateMovePlace();
+        for (Place p : all) {
+            if (inRangeOf(p, getOtherPlayer(main.getPlayer()))) {
+                i++;
+            }
+
+        }
+        if (i == all.length) {
+            return 1;
+        }
+        else {
+            if (inRangeOf(main.place(), getOtherPlayer(main.getPlayer()))) {
+                return 2;
+            }
+            return 0;
+        }
     }
 
     public Map<Place, ChessMan> getMap() {
         return map;
+    }
+
+    public ChessMan getPieceAt(Place place) {
+        return map.get(place);
+    }
+
+    private boolean inRangeOf(Place p, Player otherPlayer) {
+        List<ChessMan> m = getActivePieces(otherPlayer);
+        for (ChessMan man : m) {
+            for (Place place : man.generateMovePlace()) {
+                if (place.is(p)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void generatePlaceMap() {
