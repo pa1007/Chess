@@ -4,12 +4,9 @@ import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.event.type.EventTypes;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.Place;
-import fr.pa1007.chess.utils.Player;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
 
 public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
 
@@ -34,25 +31,12 @@ public class ChessMoveEventHandler implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent event) {
         chessMan.specialMoveCheckBefore(game);
-        int  row    = place.getRow() - 1;
-        int  column = place.getColumnNumber();
-        Node nodeT  = (Node) event.getTarget();
-        if (nodeT.getId().contains("ate")) {
-            System.out.println("Here");
-            Player player = game.getOtherPlayer(chessMan.getPlayer());
-            for (ChessMan man : game.getGraphic().get(player)) {
-                Rectangle rec = man.getGraphicRep();
-                Integer   cI  = GridPane.getColumnIndex(rec);
-                Integer   rI  = GridPane.getRowIndex(rec);
-                int       c   = cI == null ? 0 : cI;
-                int       r   = rI == null ? 0 : rI;
-                if (c == column && r == row) {
-                    System.out.println("Found");
-                    game.fireEvent(EventTypes.EAT_CHESS_PIECE_EVENT, chessMan, place, man);
-                    grid.getChildren().remove(rec);
-                    break;
-                }
-            }
+        int      row    = place.getRow() - 1;
+        int      column = place.getColumnNumber();
+        ChessMan m      = game.getPieceAt(place);
+        if (m != null) {
+            game.fireEvent(EventTypes.EAT_CHESS_PIECE_EVENT, chessMan, place, m);
+            grid.getChildren().removeIf(node -> m.getGraphicRep() == node);
         }
 
         grid.getChildren().removeIf(node -> node.getId().contains("help"));
