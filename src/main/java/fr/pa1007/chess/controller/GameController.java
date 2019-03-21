@@ -1,5 +1,6 @@
 package fr.pa1007.chess.controller;
 
+import fr.pa1007.chess.AI;
 import fr.pa1007.chess.ai.guess.part.GuessPart;
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.pieces.*;
@@ -64,7 +65,7 @@ public class GameController {
 
     public void init() {
         this.graphicRepresentation = new HashMap<>();
-        this.game = new Game(graphicRepresentation);
+        this.game = new Game(graphicRepresentation, board);
         initChess();
         game.setPlayerToPlayer(player1);
         board.setBackground(new Background(new BackgroundImage(new Image(
@@ -72,6 +73,7 @@ public class GameController {
         GameStatePattern gSP = new GameStatePattern(game, player1, null);
         GuessPart[]      l   = PatternReader.explodePattern(gSP.getPattern(), player1);
         System.out.println(Arrays.toString(l));
+        player2.setIa(true, new AI(player2, game));
     }
 
     /**
@@ -105,7 +107,6 @@ public class GameController {
      * @param cM   The piece clicked
      * @param here all the places in range of the movement can be a single piece or a array of piece
      */
-    //todo rework movement URGENT
     private void generateGraphicRepHelp(ChessMan cM, Place... here) {
         if (helpPlace) {
             board.getChildren().removeIf(node -> node.getId().contains("help"));
@@ -120,27 +121,6 @@ public class GameController {
                     helpPlace = true;
                 }
             }
-        }
-        if (cM instanceof Paw && !((Paw) cM).isPromoted()) {
-            for (Place place : ((Paw) cM).getDiagonal()) {
-                if (place != null && !place.is("P6")) {
-                    for (ChessMan man : graphicRepresentation.get(game.getOtherPlayer(cM.getPlayer()))) {
-                        Rectangle rec = man.getGraphicRep();
-                        Integer   cI  = GridPane.getColumnIndex(rec);
-                        Integer   rI  = GridPane.getRowIndex(rec);
-                        int       c   = cI == null ? 0 : cI;
-                        int       r   = rI == null ? 0 : rI;
-                        if (c == place.getColumnNumber() && r == place.getRow() - 1) {
-                            Rectangle helpR = createRectangle();
-                            helpR.setId("help!ate");
-                            helpR.setOnMouseClicked(new ChessMoveEventHandler(place, cM, board, game));
-                            board.add(helpR, place.getColumnNumber(), place.getRow() - 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
         }
     }
 
