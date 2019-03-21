@@ -6,6 +6,7 @@ import fr.pa1007.chess.ai.guess.part.MoveGuessPart;
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.event.type.EventTypes;
 import fr.pa1007.chess.game.Game;
+import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +80,19 @@ public class AI {
 
     public void play() {
         List<MoveGuessPart> all = new ArrayList<>();
-        int rCheck = game.checkCheck(game.getMain(player),game.getMain(game.getOtherPlayer(player)).place());
+
+        int malus  = 0;
+        int rCheck = game.checkCheck(game.getMain(player), new Place("P6"));
+        if (rCheck > 0) {
+            malus += 1000;
+        }
+
+        if (game.inRangeOf(game.getMain(player).place(), game.getOtherPlayer(player))) {
+            malus += 3;
+        }
+
         for (ChessMan man : game.getActivePieces(player)) {
-            Algorithm     alg = new Algorithm(game, man);
+            Algorithm     alg = new Algorithm(game, man, malus);
             MoveGuessPart mgp = alg.getBestMove();
             if (mgp != null) {
                 all.add(mgp);
