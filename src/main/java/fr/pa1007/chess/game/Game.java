@@ -250,29 +250,6 @@ public class Game {
         }
     }
 
-
-    /**
-     * @param piece the piece you want to move
-     * @param start the place you start
-     * @param end   The place you will go
-     * @return -3 if the wrong player is playing, -2 if the start place is not the same,
-     * -1 if the place is not in range of the piece, 0 if it is possible
-     */
-    public int validateMove(ChessMan piece, Place start, Place end) {
-        if (piece.getPlayer() != playerToPlayer) {
-            return -3;
-        }
-        if (!piece.place().equals(start)) {
-            return -2;
-        }
-        for (Place place : piece.generateMovePlace()) {
-            if (place.equals(end)) {
-                return 0;
-            }
-        }
-        return -1;
-    }
-
     /**
      * This will simulate a game, and check a lot of things,
      *
@@ -352,15 +329,14 @@ public class Game {
             }
 
         }
-        if (i == all.length && i != 0) {
-            return 1;
-        }
-        else {
-            if (inRangeOf(main.place(), getOtherPlayer(main.getPlayer()))) {
+        if (inRangeOf(main.place(), getOtherPlayer(main.getPlayer()))) {
+            if (i == all.length && i != 0) {
+                fireEvent(EventTypes.CHECK_MATE_PIECE_EVENT, main, getActivePieces(getOtherPlayer(from.getPlayer())));
                 return 2;
             }
-            return 0;
+            return 1;
         }
+        return 0;
     }
 
     /**
@@ -394,7 +370,7 @@ public class Game {
      */
     public MoveGuessPart getBest(List<MoveGuessPart> all) {
         Map<Integer, List<MoveGuessPart>> range = new HashMap<>();
-        int                               max   = 0;
+        int                               max   = Integer.MIN_VALUE;
         for (MoveGuessPart p : all) {
             int i = p.getReward().getTotalWin();
             if (i >= max) {
@@ -412,7 +388,17 @@ public class Game {
             }
         }
         List<MoveGuessPart> l    = range.get(max);
-        int                 size = l.size();
+        int                 size = 0;
+        try {
+            size = l.size();
+        }
+        catch (Exception e) {
+            System.err.println(max);
+            System.err.println(range);
+            System.err.println(l);
+            System.err.println(all);
+            e.printStackTrace();
+        }
         if (all.size() == size) {
             return l.get((int) (Math.random() * all.size()));
         }
@@ -484,7 +470,7 @@ public class Game {
      * @param otherPlayer the player you want to know if he has the abilities to go to this place
      * @return true if he is in range of, false if not
      */
-    private boolean inRangeOf(Place p, Player otherPlayer) {
+    public boolean inRangeOf(Place p, Player otherPlayer) {
         List<ChessMan> m = getActivePieces(otherPlayer);
         for (ChessMan man : m) {
             for (Place place : man.generateMovePlace()) {
@@ -494,6 +480,28 @@ public class Game {
             }
         }
         return false;
+    }
+
+    /**
+     * @param piece the piece you want to move
+     * @param start the place you start
+     * @param end   The place you will go
+     * @return -3 if the wrong player is playing, -2 if the start place is not the same,
+     * -1 if the place is not in range of the piece, 0 if it is possible
+     */
+    private int validateMove(ChessMan piece, Place start, Place end) {
+        if (piece.getPlayer() != playerToPlayer) {
+            return -3;
+        }
+        if (!piece.place().equals(start)) {
+            return -2;
+        }
+        for (Place place : piece.generateMovePlace()) {
+            if (place.equals(end)) {
+                return 0;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -509,6 +517,7 @@ public class Game {
         col.forEach(man -> man.forEach(na -> map.put(na.place(), na)));
         this.map = map;
     }
+
 
     public static GameStatePattern getPatternFrom(Player player) {
         return null;
