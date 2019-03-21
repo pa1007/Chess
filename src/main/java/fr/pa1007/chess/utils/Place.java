@@ -210,15 +210,22 @@ public class Place {
      * @return
      */
     public Place[] getKnightMove() {
-        Place[] places = new Place[8];
+        Place[] places = new Place[15];
         places[0] = this.more(2, 1);
-        places[1] = this.more(2, -1);
-        places[2] = this.more(-2, -1);
-        places[3] = this.more(-2, 1);
-        places[4] = this.more(1, 2);
-        places[5] = this.more(-1, 2);
-        places[6] = this.more(-1, -2);
-        places[7] = this.more(1, -2);
+        places[1] = new Place("P6");
+        places[2] = this.more(2, -1);
+        places[3] = new Place("P6");
+        places[4] = this.more(-2, -1);
+        places[5] = new Place("P6");
+        places[6] = this.more(-2, 1);
+        places[7] = new Place("P6");
+        places[8] = this.more(1, 2);
+        places[9] = new Place("P6");
+        places[10] = this.more(-1, 2);
+        places[11] = new Place("P6");
+        places[12] = this.more(-1, -2);
+        places[13] = new Place("P6");
+        places[14] = this.more(1, -2);
         return places;
     }
 
@@ -272,7 +279,7 @@ public class Place {
      * @return
      */
     public Place[] getQueenMove() {
-       return Place.getAll(this.getLines(), this.getDiagonal());
+        return Place.getAll(this.getLines(), this.getDiagonal());
     }
 
     /**
@@ -317,8 +324,8 @@ public class Place {
     }
 
     /**
-     * @param o
-     * @return
+     * @param o the object to test
+     * @return a boolean if the object is equals to this
      */
     @Override
     public boolean equals(Object o) {
@@ -335,7 +342,7 @@ public class Place {
     }
 
     /**
-     * @return
+     * @return the hascode of this
      */
     @Override
     public int hashCode() {
