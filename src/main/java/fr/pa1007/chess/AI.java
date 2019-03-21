@@ -1,8 +1,14 @@
 package fr.pa1007.chess;
 
+import fr.pa1007.chess.ai.algorithm.Algorithm;
 import fr.pa1007.chess.ai.guess.GuessPattern;
+import fr.pa1007.chess.ai.guess.part.MoveGuessPart;
+import fr.pa1007.chess.chessman.ChessMan;
+import fr.pa1007.chess.event.type.EventTypes;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AI {
 
@@ -72,7 +78,18 @@ public class AI {
     }
 
     public void play() {
-
+        List<MoveGuessPart> all = new ArrayList<>();
+        int rCheck = game.checkCheck(game.getMain(player),game.getMain(game.getOtherPlayer(player)).place());
+        for (ChessMan man : game.getActivePieces(player)) {
+            Algorithm     alg = new Algorithm(game, man);
+            MoveGuessPart mgp = alg.getBestMove();
+            if (mgp != null) {
+                all.add(mgp);
+            }
+        }
+        MoveGuessPart p = game.getBest(all);
+        game.make(p);
+        game.fireEvent(EventTypes.PLAYER_PLAYED_EVENT, p.getFrom().getPlayer(), p.getFrom(), p.getPlace());
     }
 
     private GuessPattern checkAPI(String game, String team, String enemy) {
