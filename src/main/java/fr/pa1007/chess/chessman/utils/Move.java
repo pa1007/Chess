@@ -1,5 +1,6 @@
 package fr.pa1007.chess.chessman.utils;
 
+import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.pieces.Paw;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.Place;
@@ -21,7 +22,7 @@ public class Move {
         Place[]     p      = startPlace.getPlaceAround();
         List<Place> places = new ArrayList<>();
         for (Place place : p) {
-            if (!place.is("P6")) {
+            if (!place.is("P6") && !place.is("P8")) {
                 int r = game.pieceAtThisPlace(place);
                 if (r == 0) {
                     places.add(place);
@@ -43,28 +44,51 @@ public class Move {
 
     public static Place[] getPawPossibleMove(Game game, Paw paw) {
         if (!paw.isPromoted()) {
-            Place[] p;
+            List<Place> p = new ArrayList<>();
             switch (paw.movePattern().getPattern()) {
                 case "|":
                     if (paw.getPlayer().getTeamName().equalsIgnoreCase("black")) {
-                        p = new Place[]{paw.place().more(-1, 0)};
+                        p.add(paw.place().more(-1, 0));
                     }
                     else {
-                        p = new Place[]{paw.place().more(1, 0)};
+                        p.add(paw.place().more(1, 0));
                     }
                     break;
                 case "||":
                     if (paw.getPlayer().getTeamName().equalsIgnoreCase("black")) {
-                        p = new Place[]{paw.place().more(-1, 0), paw.place().more(-2, 0)};
+                        p.add(paw.place().more(-1, 0));
+                        p.add(paw.place().more(-2, 0));
                     }
                     else {
-                        p = new Place[]{paw.place().more(1, 0), paw.place().more(2, 0)};
+                        p.add(paw.place().more(1, 0));
+                        p.add(paw.place().more(2, 0));
                     }
                     break;
                 default:
                     throw new NullPointerException("No movement pattern");
             }
-            return getPlaces(game, paw.getPlayer(), p);
+
+            List<Place> pl = new ArrayList<>();
+            for (Place temp : p) {
+                if (!temp.is("P8")) {
+                    if (!temp.is("P6")) {
+                        int r = game.pieceAtThisPlace(temp);
+                        if (r == 0) {
+                            pl.add(temp);
+                        }
+                    }
+                }
+            }
+
+            for (Place place : paw.getDiagonal()) {
+                ChessMan m = game.getPieceAt(place);
+                if (m != null && m.getPlayer() != paw.getPlayer()) {
+                    if (!pl.contains(place)) {
+                        pl.add(place);
+                    }
+                }
+            }
+            return pl.toArray(new Place[0]);
         }
         else {
             switch (paw.getPromotedType()) {
@@ -94,31 +118,38 @@ public class Move {
         return getPlaces(game, player, p);
     }
 
-    private static Place[] getPlaces(Game game, Player player, Place[] allPossiblePlace) {
+    private static List<Place> getPlacesList(Game game, Player player, Place[] allPossiblePlace) {
         List<Place> places = new ArrayList<>();
         boolean     behind = false;
         for (Place place : allPossiblePlace) {
-            if (!place.is("P6")) {
-                if (!behind) {
-                    int r = game.pieceAtThisPlace(place);
-                    if (r == 0) {
-                        places.add(place);
-                    }
-                    else {
-                        if (player.getNumber() != r) {
+            if (!place.is("P8")) {
+                if (!place.is("P6")) {
+                    if (!behind) {
+                        int r = game.pieceAtThisPlace(place);
+                        if (r == 0) {
                             places.add(place);
-                            behind = true;
                         }
                         else {
-                            behind = true;
+                            if (player.getNumber() != r) {
+                                places.add(place);
+                                behind = true;
+                            }
+                            else {
+                                behind = true;
+                            }
                         }
                     }
                 }
-            }
-            else {
-                behind = false;
+                else {
+                    behind = false;
+                }
             }
         }
-        return places.toArray(new Place[0]);
+        return places;
+
+    }
+
+    private static Place[] getPlaces(Game game, Player player, Place[] allPossiblePlace) {
+        return getPlacesList(game, player, allPossiblePlace).toArray(new Place[0]);
     }
 }
