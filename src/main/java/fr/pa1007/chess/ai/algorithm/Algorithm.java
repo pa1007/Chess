@@ -3,6 +3,7 @@ package fr.pa1007.chess.ai.algorithm;
 import fr.pa1007.chess.ai.guess.part.MoveGuessPart;
 import fr.pa1007.chess.ai.guess.part.MoveGuessPartIncomplete;
 import fr.pa1007.chess.chessman.ChessMan;
+import fr.pa1007.chess.chessman.pieces.King;
 import fr.pa1007.chess.game.Game;
 import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
@@ -15,18 +16,20 @@ import java.util.Map;
 
 public class Algorithm {
 
-    private Game                 game;
-    private Map<Place, ChessMan> smallMap;
-    private GameStatePattern     pattern;
-    private ChessMan             man;
+    private       Game                 game;
+    private final Map<Place, ChessMan> smallMap;
+    private       GameStatePattern     pattern;
+    private final ChessMan             man;
 
-    private List<MoveGuessPartIncomplete> allPossibleMove;
+    private       List<MoveGuessPartIncomplete> allPossibleMove;
+    private final int                           malus;
 
-    public Algorithm(Game game, ChessMan man) {
+    public Algorithm(Game game, ChessMan man, int malus) {
         this.game = game;
         this.smallMap = new HashMap<>();
         this.pattern = new GameStatePattern(game, man);
         this.man = man;
+        this.malus = man instanceof King ? 0 : malus;
         Map<Place, ChessMan> tr = pattern.getPlaceMap();
         Place[]              ps = man.generateMovePlace();
         for (Place p : ps) {
@@ -50,22 +53,6 @@ public class Algorithm {
         this.pattern = pattern;
     }
 
-    public List<MoveGuessPartIncomplete> getAllPossibleMove() {
-        List<MoveGuessPartIncomplete> lis = new ArrayList<>();
-        Player                        p   = man.getPlayer();
-        for (Place pl : man.generateMovePlace()) {
-            MoveGuessPartIncomplete part = new MoveGuessPartIncomplete(p, man, pl);
-            ChessMan                m;
-            if ((m = smallMap.get(pl)) != null) {
-                part.setEat();
-                part.addPossibleWin(m.getValue());
-            }
-            lis.add(part);
-        }
-        allPossibleMove = lis;
-        return lis;
-    }
-
     public MoveGuessPart getBestMove() {
         Map<Integer, MoveGuessPartIncomplete> temp = new HashMap<>();
         if (allPossibleMove == null) {
@@ -73,6 +60,9 @@ public class Algorithm {
         }
         if (allPossibleMove.size() != 0) {
             for (MoveGuessPartIncomplete i : allPossibleMove) {
+                if (i.getFrom() instanceof King) {
+                    i.addPossibleLost(2);
+                }
                 temp.put(i.calPossibleReward(), i);
             }
             Simultation best = game.simulate(temp.values());
@@ -87,7 +77,13 @@ public class Algorithm {
             MoveGuessPartIncomplete f    = temp.get(max);
             try {
                 if (best != null && best.getFrom() == f) {
-                    part = f.complete();
+                    if (f != null) {
+                        part = f.complete();
+                    }
+                    else {
+                        System.out.println(temp);
+                        return null;
+                    }
                 }
             }
             catch (UnFinishException e) {
@@ -97,6 +93,22 @@ public class Algorithm {
             return part;
         }
         return null;
+    }
+
+    private void getAllPossibleMove() {
+        List<MoveGuessPartIncomplete> lis = new ArrayList<>();
+        Player                        p   = man.getPlayer();
+        for (Place pl : man.generateMovePlace()) {
+            MoveGuessPartIncomplete part = new MoveGuessPartIncomplete(p, man, pl);
+            part.addPossibleLost(malus);
+            ChessMan m;
+            if ((m = smallMap.get(pl)) != null) {
+                part.setEat();
+                part.addPossibleWin(m.getValue());
+            }
+            lis.add(part);
+        }
+        allPossibleMove = lis;
     }
 
 }
