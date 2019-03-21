@@ -72,7 +72,6 @@ public class MoveGuessPartIncomplete extends MoveGuessPart {
         return new MoveGuessPart(playerFrom, new Reward(possibleLost, possibleWin), this.toString(), from, place);
     }
 
-
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
@@ -82,6 +81,9 @@ public class MoveGuessPartIncomplete extends MoveGuessPart {
                 .add("checked", checked)
                 .add("eat", eat)
                 .add("makeCheck", makeCheck)
+                .add("meta", meta)
+                .add("from", from)
+                .add("place", place)
                 .toString();
     }
 }
