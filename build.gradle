@@ -1,5 +1,6 @@
 plugins {
-    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
 group 'fr.pa1007.chess'
@@ -16,3 +17,7 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
 }
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+mainClassName = 'fr.pa1007.chess.Chess'
