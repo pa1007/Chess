@@ -1,10 +1,12 @@
 package fr.pa1007.chess.game;
 
 import fr.pa1007.chess.ai.algorithm.Simultation;
+import fr.pa1007.chess.ai.guess.part.MoveGuessPart;
 import fr.pa1007.chess.ai.guess.part.MoveGuessPartIncomplete;
 import fr.pa1007.chess.chessman.ChessMan;
 import fr.pa1007.chess.chessman.utils.ChessManType;
 import fr.pa1007.chess.event.Event;
+import fr.pa1007.chess.event.type.EventTypes;
 import fr.pa1007.chess.listener.Listener;
 import fr.pa1007.chess.listener.game.CheckMatePieceEventListener;
 import fr.pa1007.chess.listener.game.CheckPieceEventListener;
@@ -13,10 +15,8 @@ import fr.pa1007.chess.listener.player.PlayerPlayedListener;
 import fr.pa1007.chess.utils.GameStatePattern;
 import fr.pa1007.chess.utils.Place;
 import fr.pa1007.chess.utils.Player;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javafx.scene.layout.GridPane;
+import java.util.*;
 
 public class Game {
 
@@ -24,18 +24,21 @@ public class Game {
      * The graphic representation of the game
      */
     private Map<Player, List<ChessMan>> graphic;
+
     /**
      * The death list of piece
      */
     private Map<Player, List<ChessMan>> deadMap;
+
     /**
      * The player who need to play
      */
-    private Player                      playerToPlayer;
+    private Player playerToPlayer;
+
     /**
      * All the listeners, if you want to add some, add them in the constructor
      */
-    private Listener[]                  listeners;
+    private Listener[] listeners;
 
     /**
      * This is the main piece (The more important one) of the white team.
@@ -49,8 +52,18 @@ public class Game {
      *
      * @since 1.0
      */
-    private ChessMan             blackMain;
+    private ChessMan blackMain;
+
+    /**
+     * The map that link the place and a chessMan or null if empty
+     */
     private Map<Place, ChessMan> map;
+
+
+    /**
+     * The grid of the graphic
+     */
+    private GridPane grid;
 
     /**
      * Constructor for copping a game
@@ -65,6 +78,7 @@ public class Game {
         this.whiteMain = game.whiteMain;
         this.blackMain = game.blackMain;
         this.map = game.map;
+        this.grid = game.grid;
     }
 
 
@@ -72,9 +86,11 @@ public class Game {
      * Main constructor,
      *
      * @param graphicRepresentation all the pieces to use
+     * @param grid                  the graphic representation
      */
-    public Game(Map<Player, List<ChessMan>> graphicRepresentation) {
+    public Game(Map<Player, List<ChessMan>> graphicRepresentation, GridPane grid) {
         this.graphic = graphicRepresentation;
+        this.grid = grid;
         this.deadMap = new HashMap<>();
         this.generatePlaceMap();
         listeners = new Listener[]{
@@ -173,6 +189,12 @@ public class Game {
         return null;
     }
 
+    /**
+     * Method for getting the number of the player at a given place
+     *
+     * @param p The place you want to test
+     * @return 0 if no team or give {@link fr.pa1007.chess.utils.Player#getNumber()} the number of the team
+     */
     public int pieceAtThisPlace(Place p) {
         this.generatePlaceMap();
         ChessMan m = map.get(p);
@@ -229,6 +251,13 @@ public class Game {
     }
 
 
+    /**
+     * @param piece the piece you want to move
+     * @param start the place you start
+     * @param end   The place you will go
+     * @return -3 if the wrong player is playing, -2 if the start place is not the same,
+     * -1 if the place is not in range of the piece, 0 if it is possible
+     */
     public int validateMove(ChessMan piece, Place start, Place end) {
         if (piece.getPlayer() != playerToPlayer) {
             return -3;
@@ -244,12 +273,21 @@ public class Game {
         return -1;
     }
 
-    public Simultation simulate(Collection<MoveGuessPartIncomplete> i) {
+    /**
+     * This will simulate a game, and check a lot of things,
+     *
+     * @param MoveCollection the collection  of {@link MoveGuessPartIncomplete MoveGuessPartIncomplete} you want to simulate
+     * @return a simulation with the best MoveGuessPartIncomplete (of the collection) in it
+     */
+    public Simultation simulate(Collection<MoveGuessPartIncomplete> MoveCollection) {
+        System.out.println("Start simulation");
         Map<Integer, MoveGuessPartIncomplete> temp = new HashMap<>();
         int                                   max  = 0;
-        for (MoveGuessPartIncomplete mvi : i) {
+        for (MoveGuessPartIncomplete mvi : MoveCollection) {
+            System.out.println(MoveCollection);
             ChessMan m = mvi.getFrom();
             int      r = validateMove(m, m.place(), mvi.getPlace());
+            System.out.println("if the move is validated " + r);
             if (r == 0) {
                 List<ChessMan> polist = getActivePieces(getOtherPlayer(m.getPlayer()));
                 for (ChessMan t : polist) {
@@ -259,11 +297,31 @@ public class Game {
                     }
                 }
                 int rCheck = checkCheck(mvi.getFrom(), mvi.getPlace());
+                System.out.println("If there is a check" + rCheck);
+                if (rCheck > 0) {
+                    mvi.setMakeCheck();
+                    mvi.addPossibleWin(rCheck * 2);
+                }
+                temp.putIfAbsent(mvi.calPossibleReward(), mvi);
+                if (mvi.calPossibleReward() > max) {
+                    max = mvi.calPossibleReward();
+                }
             }
+
+        }
+        MoveGuessPartIncomplete win = temp.get(max);
+        int                     z   = 0;
+        for (MoveGuessPartIncomplete w : temp.values()) {
+            if (w == win) {
+                win.setChecked();
+                break;
+            }
+            z++;
+
         }
 
-
-        return null;
+        System.out.println("End simulation");
+        return new Simultation(z, win, max, 1, true);
     }
 
     /**
@@ -272,7 +330,7 @@ public class Game {
      *
      * @param from  the piece you want to move
      * @param place to the place
-     * @return
+     * @return 1 if the piece is check, 2 if check mate, 0 if nothing
      */
     public int checkCheck(ChessMan from, Place place) {
         ChessMan main;
@@ -294,7 +352,7 @@ public class Game {
             }
 
         }
-        if (i == all.length) {
+        if (i == all.length && i != 0) {
             return 1;
         }
         else {
@@ -305,14 +363,127 @@ public class Game {
         }
     }
 
+    /**
+     * @return the Place's stored map
+     */
     public Map<Place, ChessMan> getMap() {
         return map;
     }
 
+    /**
+     * To get the place at a given place
+     *
+     * @param place the place you want to know the {@link ChessMan}
+     * @return a chessMan(if found) or null(if not found)
+     */
     public ChessMan getPieceAt(Place place) {
         return map.get(place);
     }
 
+    /**
+     * <strong>This method is still in WIP</strong>
+     * <p>
+     * This method will get the best move from a list <br>
+     * This will compare them by the totalReward there is in, <br>
+     * <em>if everyting is equals, will give a random thing (Will be rework with deep leaning and maybe recusive work) </em>
+     * will return the make check ones and where you eat somethings
+     * </p>
+     *
+     * @param all the list of move you want to get
+     * @return a {@link MoveGuessPart MoveGuessPart}, who is the <code>BEST</code> one
+     */
+    public MoveGuessPart getBest(List<MoveGuessPart> all) {
+        Map<Integer, List<MoveGuessPart>> range = new HashMap<>();
+        int                               max   = 0;
+        for (MoveGuessPart p : all) {
+            int i = p.getReward().getTotalWin();
+            if (i >= max) {
+                max = i;
+                if (range.containsKey(max)) {
+                    List<MoveGuessPart> l = range.get(max);
+                    l.add(p);
+                    range.replace(max, l);
+                }
+                else {
+                    List<MoveGuessPart> l = new ArrayList<>();
+                    l.add(p);
+                    range.put(max, l);
+                }
+            }
+        }
+        List<MoveGuessPart> l    = range.get(max);
+        int                 size = l.size();
+        if (all.size() == size) {
+            return l.get((int) (Math.random() * all.size()));
+        }
+        if (size == 1) {
+            return l.get(0);
+        }
+        for (MoveGuessPart p : l) {
+            if (p.getMeta().contains("makeCheck=true")) {
+                return p;
+            }
+        }
+        for (MoveGuessPart p : l) {
+            if (p.getMeta().contains("eat=true")) {
+                return p;
+            }
+        }
+        return l.get(0);
+    }
+
+    /**
+     * <strong>This method is still in WIP</strong>
+     * <p>
+     * With this method the AI will move the piece and throws events like if the player just play,
+     * <br> like if we have pressed a button but whit a given move to follow
+     * </p>
+     *
+     * @param p the {@link MoveGuessPart MoveGuessPart} you want to do
+     */
+    public void make(MoveGuessPart p) {
+        System.out.println("Piece moved");
+        ChessMan chessMan = p.getFrom();
+        grid.getChildren().removeIf(node -> node == chessMan.getGraphicRep());
+        grid.add(chessMan.getGraphicRep(), p.getPlace().getColumnNumber(), p.getPlace().getRow() - 1);
+        chessMan.place().setRow(p.getPlace().getRow());
+        chessMan.place().setColumn(p.getPlace().getColumn());
+        chessMan.setMoveNumber(chessMan.movementNumber() + 1);
+        ChessMan m = getPieceAt(p.getPlace());
+        if (m != null) {
+            fireEvent(EventTypes.EAT_CHESS_PIECE_EVENT, chessMan, p.getPlace(), m);
+            grid.getChildren().removeIf(node -> m.getGraphicRep() == node);
+        }
+        System.out.println(chessMan);
+    }
+
+    /**
+     * This method is here for getting the main piece of a player
+     *
+     * @param p the player you want to get the main piece
+     * @return a black or white king or null if not found
+     */
+    public ChessMan getMain(Player p) {
+        switch (p.getTeam()) {
+            case BLACK:
+                return blackMain;
+            case WHITE:
+                return whiteMain;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * <strong>This method is still in WIP</strong>
+     * <p>
+     * This method will test if every piece of a player is in range of the place given
+     * </p>
+     *
+     * @param p           the place you want to know
+     * @param otherPlayer the player you want to know if he has the abilities to go to this place
+     * @return true if he is in range of, false if not
+     */
     private boolean inRangeOf(Place p, Player otherPlayer) {
         List<ChessMan> m = getActivePieces(otherPlayer);
         for (ChessMan man : m) {
@@ -325,6 +496,9 @@ public class Game {
         return false;
     }
 
+    /**
+     * This method is for generating the map of all place / piece or null
+     */
     private void generatePlaceMap() {
         Place[]              places = Place.getAllPieces();
         Map<Place, ChessMan> map    = new HashMap<>();
