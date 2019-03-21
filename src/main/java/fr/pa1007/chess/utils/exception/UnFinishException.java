@@ -1,7 +1,8 @@
 package fr.pa1007.chess.utils.exception;
 
-public class UnFinishException extends Exception {
+import fr.pa1007.chess.ai.guess.part.MoveGuessPartIncomplete;
 
+public class UnFinishException extends Exception {
 
 
     /**
@@ -42,4 +43,8 @@ public class UnFinishException extends Exception {
     public UnFinishException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public UnFinishException(MoveGuessPartIncomplete moveGuessPartIncomplete) {
+        super("The Process is not finish here + " + moveGuessPartIncomplete);
     }
+}
